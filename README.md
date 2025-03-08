@@ -179,7 +179,7 @@ To run this Redis metrics application locally, follow these steps:
 
 TBD
 
-```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
