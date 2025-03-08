@@ -19,7 +19,7 @@ labels:
     title: "[Docs]"
   - label: "database"
     files:
-      - "src/database/**/*"
+      - "src/infrastructure/**/*"
     title: "[Database]"
   - label: "api"
     files:
