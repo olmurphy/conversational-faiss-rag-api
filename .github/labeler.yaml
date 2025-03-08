@@ -1,0 +1,36 @@
+# .github/labeler.yml
+
+version: "2.0" # Version of the labeler configuration
+
+labels:
+  - label: "feature"
+    files:
+      - "src/**/*" # Matches files in the "" directory and subdirectories
+    title: "[Feature]" # Optional: Adds a prefix to the PR title
+  - label: "bugfix"
+    files:
+      - "src/bugs/**/*"
+      - "src/fixes/**/*"
+    title: "[Bugfix]"
+  - label: "documentation"
+    files:
+      - "docs/**/*"
+      - "*.md"
+    title: "[Docs]"
+  - label: "database"
+    files:
+      - "src/infrastructure/**/*"
+    title: "[Database]"
+  - label: "api"
+    files:
+      - "src/api/**/*"
+    title: "[API]"
+  - label: "tests"
+    files:
+      - "tests/**/*"
+    title: "[Tests]"
+  - label: "dependencies"
+    files:
+      - "requirements.txt"
+      - "pyproject.toml"
+    title: "[Dependencies]"
