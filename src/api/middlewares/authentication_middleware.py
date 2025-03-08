@@ -122,19 +122,18 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 issuer=issuer,
             )
             self.logger.debug({"message": "Token successfully validated"})
-        except jwt.ExpiredSignatureError:
-            self.logger.warning({"message": "Token has expired"})
+        except jwt.ExpiredSignatureError as e:
+            self.logger.warning({"message": "Token has expired", "error": e})
             raise HTTPException(status_code=401, detail="Token has expired")
-        except jwt.InvalidAudienceError:
-            self.logger.warning({"message": "Invalid audience"})
+        except jwt.InvalidAudienceError as e:
+            self.logger.warning({"message": "Invalid audience", "error": e})
             raise HTTPException(status_code=401, detail="Invalid audience")
-        except jwt.InvalidIssuerError:
-            self.logger.warning({"message": "Invalid issuer"})
+        except jwt.InvalidIssuerError as e:
+            self.logger.warning({"message": "Invalid issuer", "error": e})
             raise HTTPException(status_code=401, detail="Invalid issuer")
-        except jwt.InvalidSignatureError:
-            self.logger.warning({"message": "Invalid token signature"})
+        except jwt.InvalidSignatureError as e:
+            self.logger.warning({"message": "Invalid token signature", "error": e})
             raise HTTPException(status_code=401, detail="Invalid token signature")
         except jwt.PyJWTError as e:
             self.logger.error({"message": "JWT error", "error": e})
-            self.logger.error(f"JWT error: {e}")
             raise HTTPException(status_code=401, detail="Invalid token")

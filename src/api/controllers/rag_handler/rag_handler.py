@@ -11,7 +11,7 @@ from api.schemas.rag_handler_schemas import (
 from application.assistance.service import AssistantService
 from context import AppContext
 from fastapi import APIRouter, Request, status
-
+# from application.user_session.user_session import UserSession
 router = APIRouter()
 
 
@@ -40,6 +40,7 @@ async def ask_question_endpoint(request: Request, chat_query: AskQuestionInputSc
     user_query = chat_query.chat_query
     session_id = request.headers.get(SESSION_ID_HEADER)  # use the constant.
 
+    # user_session = UserSession(redis_session=request_context.redis_session, postgres_session=request_context.)
     redis_session = request_context.redis_session
     chat_history = redis_session.get_chat_history(session_id)
 

@@ -1,8 +1,12 @@
 import logging
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, func, text
-from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy.exc import SQLAlchemyError
+import uuid
+
 from configurations.postgres_config import PostgresDBConfig
+from models.user_interactions import UserInteraction
+from sqlalchemy import (Column, DateTime, Integer, String, create_engine, func,
+                        text)
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 Base = declarative_base()
 
@@ -40,3 +44,34 @@ class PostgresSession:
         """Closes the engine and its connection pool."""
         self.engine.dispose()
         self.logger.info({"message": "PostgreSQL connection pool closed."})
+
+
+    def store_chat_message(self, session_id, messages):
+        interaction_id = uuid.uuid4()
+        try:
+            with self.get_db() as db:
+                user_interaction = UserInteraction(
+                    interaction_id=interaction_id,
+                    session_id=session_id,
+                    user_query=messages[-2].get("user_query") if len(messages) >= 2 else None,
+                    llm_response=messages[-1].get("llm_response") if messages else None,
+                    chat_history=messages,
+                )
+                db.add(user_interaction)
+                db.commit()
+                self.logger.debug(
+                    {
+                        "message": f"Stored chat message for session_id: {session_id}",
+                        "interaction_id": interaction_id,
+                        "data": messages,
+                    }
+                )
+        except SQLAlchemyError as e:
+            self.logger.error(
+                {
+                    "message": f"Failed to store chat message for session_id: {session_id}",
+                    "data": messages,
+                    "error": e,
+                }
+            )
+            raise
