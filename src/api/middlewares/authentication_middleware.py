@@ -51,8 +51,11 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             raise ValueError("RedisAuth is not initialized in the context")
 
     async def dispatch(self, request: Request, call_next: Callable):
+        self.logger.debug({"message": f"AuthenticationMiddleware: Intercepting request {request.method} {request.url.path}"})
         if any(request.url.path.startswith(path) for path in exclude_paths):
+            self.logger.debug(f"Excluded path: {request.url.path}")
             return await call_next(request)
+        
 
         # Try to get token from Authorization header first
         auth_header = request.headers.get("Authorization")
@@ -60,8 +63,10 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         if auth_header and auth_header.startswith("Bearer "):
             token = auth_header.split(" ")[1]
+            self.logger.debug({"message": "Token found in Authorization header"})
         else:
             # If no Authorization header, try session id from redis
+            self.logger.debug({"message": "No Authorization header found, checking session id"})
             session_id = request.headers.get(SESSION_ID_HEADER)
             if session_id:
                 print("We are here")
@@ -76,15 +81,17 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         try:
             await self.authenticate_request(token)
             response = await call_next(request)
+            self.logger.debug({"message": f"Request {request.method} {request.url.path} Authentication successful"})
             return response
         except HTTPException as e:
-            self.logger.warning(f"Authentication failed: {e.detail}")
+            self.logger.warning({"message": "Authentication error", "error": e})
             raise e
         except Exception as e:
-            self.logger.error(f"Unexpected authentication error: {e}")
+            self.logger.error({"message": "Unexpected error during authentication", "error": e})
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def authenticate_request(self, token: str):
+        self.logger.debug({"message": "Authenticating request with token", "data": token})
         headers = jwt.get_unverified_header(token)
         kid = headers["kid"]
         unverified_payload = jwt.decode(
@@ -95,10 +102,12 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         jwks_url = issuer + "/publickeys"
         audience = unverified_payload["aud"][0]
 
+        self.logger.debug({"message": "Fetching JWKS URL", "data": jwks_url})
         jwks = self.redis_auth.get_jwks(jwks_url)
         matching_keys = [key for key in jwks["keys"] if key["kid"] == kid]
 
         if not matching_keys:
+            self.logger.warning({"message": "Invalid KID or JWKS not found"})
             raise HTTPException(status_code=401, detail="Invalid KID or JWKS not found")
 
         key = matching_keys[0]
@@ -112,15 +121,20 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 audience=audience,
                 issuer=issuer,
             )
-
+            self.logger.debug({"message": "Token successfully validated"})
         except jwt.ExpiredSignatureError:
+            self.logger.warning({"message": "Token has expired"})
             raise HTTPException(status_code=401, detail="Token has expired")
         except jwt.InvalidAudienceError:
+            self.logger.warning({"message": "Invalid audience"})
             raise HTTPException(status_code=401, detail="Invalid audience")
         except jwt.InvalidIssuerError:
+            self.logger.warning({"message": "Invalid issuer"})
             raise HTTPException(status_code=401, detail="Invalid issuer")
         except jwt.InvalidSignatureError:
+            self.logger.warning({"message": "Invalid token signature"})
             raise HTTPException(status_code=401, detail="Invalid token signature")
         except jwt.PyJWTError as e:
+            self.logger.error({"message": "JWT error", "error": e})
             self.logger.error(f"JWT error: {e}")
             raise HTTPException(status_code=401, detail="Invalid token")

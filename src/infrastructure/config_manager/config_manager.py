@@ -5,7 +5,7 @@ from attr import dataclass
 from jsonschema import ValidationError as JsonSchemaValidationError, validate
 from pydantic import ValidationError as PydanticValidationError, BaseModel
 
-from infrastracture.config_manager.errors import ConfigValidationError, ModelValidationError
+from infrastructure.config_manager.errors import ConfigValidationError, ModelValidationError
 
 T = TypeVar('T', bound=BaseModel)
 

@@ -3,7 +3,6 @@ import os
 import uvicorn
 from api.controllers.core.liveness import liveness_handler
 from api.controllers.core.readiness import readiness_handler
-from api.controllers.intent_classifier import intent_classifier_handler
 from api.controllers.rag_handler import rag_handler
 from api.middlewares.app_context_middleware import AppContextMiddleware
 from api.middlewares.error_handling_middleware import ErrorHandlingMiddleware
@@ -15,10 +14,10 @@ from configurations.variables import get_variables
 from context import AppContext, AppContextParams
 from fastapi import FastAPI
 from fastapi.middleware.gzip import GZipMiddleware
-from infrastracture.logger import get_logger
-from infrastracture.postgres_db_manager.postgres_session import PostgresSession
-from infrastracture.redis_manager.redis_session import RedisSession
-from infrastracture.redis_manager.redis_auth import RedisAuth
+from infrastructure.logger import get_logger
+from infrastructure.postgres_db_manager.postgres_session import PostgresSession
+from infrastructure.redis_manager.redis_session import RedisSession
+from infrastructure.redis_manager.redis_auth import RedisAuth
 
 from api.middlewares.authentication_middleware import AuthenticationMiddleware
 
@@ -39,7 +38,6 @@ def create_app(context: AppContext) -> FastAPI:
 
     app.include_router(liveness_handler.router)
     app.include_router(readiness_handler.router)
-    app.include_router(intent_classifier_handler.router)
     app.include_router(rag_handler.router)
 
     return app

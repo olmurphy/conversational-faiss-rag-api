@@ -4,7 +4,7 @@ from typing import Dict, Optional
 
 import redis
 from configurations.redis_config import RedisConfig
-from infrastracture.redis_manager.util import (deserialize_message,
+from infrastructure.redis_manager.util import (deserialize_message,
                                                serialize_message)
 
 SESSION_KEY_PREFIX = "session:"

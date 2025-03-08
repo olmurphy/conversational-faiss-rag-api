@@ -106,7 +106,7 @@ def get_logger(logger_name='mialogger') -> logging.Logger:
         logging.root.removeHandler(handler)
         
     logger = logging.getLogger(logger_name)
-    log_level = os.environ.get('LOG_LEVEL', logging.INFO).upper()
+    log_level = os.environ.get('LOG_LEVEL', logging.INFO)
     logging.root.setLevel(log_level)
     logger.setLevel(log_level)
 

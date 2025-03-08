@@ -9,9 +9,9 @@ from application.assistance.chains.assistant_prompt import \
     AssistantPromptBuilder
 from application.assistance.helper import load_documents
 from context import AppContext
-from infrastracture.embeddings_manager.embeddings_manager import \
+from infrastructure.embeddings_manager.embeddings_manager import \
     EmbeddingsManager
-from infrastracture.llm_manager.llm_manager import LlmManager
+from infrastructure.llm_manager.llm_manager import LlmManager
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_community.vectorstores import FAISS
 from langchain_core.messages import AIMessage, HumanMessage

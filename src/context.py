@@ -3,12 +3,12 @@ from typing import Optional
 
 from attrs import define
 
-# from infrastracture.metrics.manager import MetricsManager
+# from infrastructure.metrics.manager import MetricsManager
 from configurations.service_model import ConfigSchema
 from configurations.variables_model import Variables
 from starlette.requests import Request
-from infrastracture.redis_manager.redis_session import RedisSession
-from infrastracture.redis_manager.redis_auth import RedisAuth
+from infrastructure.redis_manager.redis_session import RedisSession
+from infrastructure.redis_manager.redis_auth import RedisAuth
 
 
 class RequestContext:
