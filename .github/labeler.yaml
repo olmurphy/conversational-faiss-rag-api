@@ -34,3 +34,7 @@ labels:
       - "requirements.txt"
       - "pyproject.toml"
     title: "[Dependencies]"
+  - label: "workflow"
+    files:
+      - ".github/**/*"
+    title: "[Workflow]"
