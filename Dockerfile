@@ -1,5 +1,5 @@
 # Use the official Python image with a slim variant for a smaller size
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Create and set a non-root user for better security
 RUN useradd -m -s /bin/bash python
