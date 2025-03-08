@@ -254,6 +254,10 @@ LLM
 .
 ├── .github/
 │   └── workflows - github define actions / workflows
+├── devops/
+│   └── kubernetes
+├── docs/
+│   └── database_design
 ├── src/
 │   ├── api/
 │   │   ├── controllers
