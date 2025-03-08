@@ -18,3 +18,4 @@ redis
 numpy
 psycopg2-binary
 psutil
+pyjwt

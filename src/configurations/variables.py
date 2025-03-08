@@ -1,4 +1,4 @@
-from infrastracture.env_vars_manager.env_vars_manager import EnvVarsManager, EnvVarsParams
+from infrastructure.env_vars_manager.env_vars_manager import EnvVarsManager, EnvVarsParams
 from configurations.variables_model import Variables
 
 def get_variables(logger):

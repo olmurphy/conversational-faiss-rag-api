@@ -15,7 +15,7 @@ from fastapi import APIRouter, Request, status
 router = APIRouter()
 
 
-@router.get("/test-auth-endpoint")
+@router.get("/test-auth")
 async def test(request: Request):
     return ""
 

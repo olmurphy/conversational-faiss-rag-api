@@ -1,5 +1,5 @@
 from pathlib import Path
-from infrastracture.config_manager.config_manager import ConfigManager, ConfigManagerParams
+from infrastructure.config_manager.config_manager import ConfigManager, ConfigManagerParams
 from configurations.service_model import ConfigSchema
 
 
