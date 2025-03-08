@@ -42,9 +42,6 @@ RUN mkdir -p /home/python/.cache/huggingface && \
 COPY . .
 # COPY configuration.json /app/configuration.json
 
-# Expose the application port
-EXPOSE 8000
-
 # Switch to the non-root user
 USER python
 
