@@ -6,6 +6,9 @@ import socket
 import uuid
 import inspect
 import psutil
+import datetime
+import queue
+import threading
 
 from pythonjsonlogger import jsonlogger
 
@@ -97,6 +100,10 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
             size /= power
             n += 1
         return f"{size:.2f} {power_labels.get(n, 'Unknown')}"
+
+    def convertCreated(self, timestamp):
+        dt_object = datetime.datetime.fromtimestamp(timestamp)
+        return dt_object.strftime('%Y-%m-%dT%H:%M:%S.%fZ') #ISO 8601 format
         
 
 
@@ -125,3 +132,95 @@ def get_logger(logger_name='mialogger') -> logging.Logger:
     logger.info({"message": f"Application starting with log level: {log_level}" }) # print the log level
 
     return logger
+
+
+class AsyncLogger:
+    def __init__(
+        self,
+        logger_name="mialogger",
+        loq_queue_size=1000,
+        log_batch_size=100,
+        log_batch_interval=1.0,
+    ):
+        self.logger_name = logger_name
+        self.log_queue = queue.Queue(maxsize=loq_queue_size)
+        self.log_worker_thread = None
+        self.logger = self._setup_logger()
+        self._start_worker()
+
+        # constants for batch loading for async logging
+        self.loq_queue_size = loq_queue_size
+        self.log_batch_size = log_batch_size
+        self.log_batch_interval = log_batch_interval
+
+        # Dynamically add logging methods
+        for level_name, level_value in logging._nameToLevel.items():
+            setattr(self, level_name.lower(), lambda msg, extra=None, level=level_value: self.async_log(level, msg, extra))
+
+    @property
+    def get_logger(self):
+        return self.logger
+
+    def _setup_logger(self):
+        logger = logging.getLogger(self.logger_name)
+        log_level = os.environ.get("LOG_LEVEL", logging.INFO).upper()
+        logger.setLevel(log_level)
+        formatter = CustomJsonFormatter(
+            fmt="%(asctime)s %(created)f %(pid)s %(levelno)s %(message)s %(filename)s %(lineno)s %(module)s %(funcName)s %(pathname)s %(processName)s %(stack_info)s %(taskName)s",
+        )
+        handler = logging.StreamHandler(sys.stdout)
+        handler.addFilter(lambda record: record.name.startswith(self.logger_name))
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.propagate = False
+        return logger
+
+    def _start_worker(self):
+        if self.log_worker_thread is None:
+            self.log_worker_thread = threading.Thread(
+                target=self._log_worker, daemon=True
+            )
+            self.log_worker_thread.start()
+
+    def _log_worker(self):
+        batch = []
+        last_flush = time.time()
+        while True:
+            try:
+                record = self.log_queue.get(timeout=1.0)
+                if record is None:
+                    break
+                batch.append(record)
+                if (
+                    len(batch) >= self.log_batch_size
+                    or time.time() - last_flush >= self.log_batch_interval
+                ):
+                    for r in batch:
+                        self.logger.handle(r)
+                    batch.clear()
+                    last_flush = time.time()
+            except queue.Empty:
+                if batch and time.time() - last_flush >= self.log_batch_interval:
+                    for r in batch:
+                        self.logger.handle(r)
+                    batch.clear()
+                    last_flush = time.time()
+            except Exception as e:
+                logging.exception(f"Error in log worker: {e}")
+
+    def async_log(self, level, message, extra=None):
+        if isinstance(self.logger, logging.LoggerAdapter):
+            base_logger = self.logger.logger
+            record = base_logger.makeRecord(
+                base_logger.name, level, None, None, message, None, None, extra=extra
+            )
+        else:
+            record = self.logger.makeRecord(
+                self.logger.name, level, None, None, message, None, None, extra=extra
+            )
+        self.log_queue.put(record)
+
+    def shutdown(self):
+        if self.log_worker_thread:
+            self.log_queue.put(None)
+            self.log_worker_thread.join()
