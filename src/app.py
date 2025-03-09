@@ -18,6 +18,8 @@ from infrastructure.logger import get_logger
 from infrastructure.postgres_db_manager.postgres_session import PostgresSession
 from infrastructure.redis_manager.redis_session import RedisSession
 from infrastructure.redis_manager.redis_auth import RedisAuth
+from api.middlewares.prometheus_middleware import PrometheusMiddleware
+from api.controllers.metrics.metrics_handler import router as metrics_router
 
 from api.middlewares.authentication_middleware import AuthenticationMiddleware
 
@@ -34,11 +36,13 @@ def create_app(context: AppContext) -> FastAPI:
     app.add_middleware(ErrorHandlingMiddleware, logger=context.logger)
     app.add_middleware(LoggerMiddleware, logger=context.logger)
     app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
-    app.add_middleware(AuthenticationMiddleware, app_context=context)
+    # app.add_middleware(AuthenticationMiddleware, app_context=context)
+    app.add_middleware(PrometheusMiddleware)  # Add Prometheus middleware
 
     app.include_router(liveness_handler.router)
     app.include_router(readiness_handler.router)
     app.include_router(rag_handler.router)
+    app.include_router(metrics_router) 
 
     return app
 

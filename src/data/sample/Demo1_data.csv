@@ -1,0 +1,389 @@
+Type,Name,Description,Content,Metadata
+Report,3CM Category Health,"The 3CM Category Health Tracking report will help track category progress
+towards intents and guardrails. The data will be refreshed on a quarterly basis","In Q1 2023, the 3CM Category Health report showed a 12% increase in revenue compared to Q4 2022. Category health scores improved by 10%, with Beverages (18% growth) and Snacks (15% growth) leading performance. Compliance with guardrails reached 95%, and progress towards business goals improved by 8%. Inventory turnover increased by 8%, and stock levels were optimized across 90% of categories.","{
+  ""App Name"": ""3CM Category Health"",
+  ""Topic"": ""Category Health"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com""
+}"
+Report,84.51° Merch Insights Reporting,"84.51° Merch Insights Reporting is a Business Intelligence suite that visualizes
+Key Performance Indicators across leading drivers of business health. Current
+reporting includes Customer KPIs, Market Share, and Promotions",". In Q1 2023, the platform reported 2.5 million in sales revenue with 25,000 units sold and a sell through rate of 7845.60, and promotions drove a 22% increase in sales, with the ""Buy One, Get One Free"" campaign showing the highest uplift at 30%. Weekly ad performance improved by 15%, particularly for featured products. Market share grew by 5% in the Midwest region, and the top 10% of customers contributed 40% of total revenue. Data is sourced from POS systems, customer loyalty programs, and inventory management systems.","{
+    ""App Name"": ""84.51° Merch Insights Reporting"",
+    ""Topic"": ""Merch Reporting"",
+    ""Type"": ""Report"",
+    ""Link"": ""example.com""
+}"
+Report,"Assortment KOMPASS Product
+Ranking (AKPR) Report","KPR is a client facing Category ranking of products based on customer metrics.
+This report is available to 84.51° Stratum subscribers aligned to the KOMPASS
+calendar","In Q1 2023, the AKPR report ranked over 1,200 products across 15 categories, with snacks and beverages leading at 18% and 15% growth, respectively. Customer engagement metrics showed a 12% increase in repeat purchases, while the average basket size reached $50.30. Top-performing products included Brand A chips (25% sales uplift) and Brand B energy drinks (20% growth). Underperforming products, such as Brand C cookies, saw a 10% decline in sales. Weekly updates highlighted a 5% improvement in customer satisfaction scores, driven by optimized assortments in the Midwest region. Data sources included POS systems, loyalty programs, and customer feedback surveys.","{
+  ""App Name"": ""AKPR (Assortment KOMPASS Product Ranking)"",
+  ""Topic"": ""Assortment"",
+  ""Type"": ""Report"",
+  ""Link"": ""https://example.com/akpr-report""
+}"
+Report,Boost Membership Report ,"Boost membership report includes customer metrics for Trial Conversion,
+Engagement KPI's and Renewal Rates and more by Division and Modality","In Q1 2023, the Boost Membership Report highlighted a 15% trial conversion rate, with the highest conversions in the Midwest division (20%). Engagement KPIs showed a 12% increase in active users, with an average basket size of $55.40. Renewal rates improved to 85%, up from 78% in the previous quarter. The report also revealed that digital modality users had a 10% higher engagement rate compared to in-store members. Top-performing divisions included the Northeast (18% growth) and Southwest (16% growth). Data was sourced from membership platforms, POS systems, and customer feedback surveys.","{
+  ""App Name"": ""Boost Membership Report"",
+  ""Topic"": ""Membership"",
+  ""Type"": ""Report"",
+  ""Link"": ""https://example.com/boost-membership-report""
+}"
+Report ,CaMDash,"Trended Customer KPIs and Market Shares across commodities, departments and total store.","In Q1 2023, Sales Revenue reached $5.2M, with 45,000 units sold. The Sell-Through Rate was 78%, and Inventory Turnover improved to 8 times. Customer Engagement increased by 12%, and the Average Basket Size was $35. Top-performing categories included Beverages (18% growth) and Snacks (15% growth), while the Grocery department saw a 10% increase in sales. Overall, the total store achieved a 12% sales growth.","{
+  ""App Name"": ""Trended Customer KPIs and Market Shares"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/trended-customer-kpis""
+}"
+Report ,"CAT - Comprehensive Assortment
+Tool","Item level data and guides to aid in assortment decision making, including item ranks and add/delete/expansion recommendations.","In Q1 2023, the top-ranked items achieved a 20% increase in sales, while Stock-On-Hand levels improved by 15%. The report also highlights opportunities for assortment optimization, with 30% of items recommended for expansion and 10% flagged for deletion.","{
+  ""App Name"": CAT - Comprehensive Assortment
+Tool"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/comprehensive-assortment-tool""
+}"
+Report ,"Corporate List Discrepancy
+Reporting","A report that identifies discrepancies between corporate lists maintained in RBP
+vs the lists maintained in NEXT.","In Q1 2023, 8% of items showed discrepancies between corporate lists in RBP and NEXT, with Price Elasticity variations observed in 12% of flagged items. Discount Rates averaged 10%, and 90% of discrepancies were resolved within 48 hours. The report enabled the export of 500 current items, 200 removed items, and 100 region-specific items for further analysis.","{
+  ""App Name"": ""Corporate List Discrepancy Report"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/corporate-list-discrepancy""
+}"
+Report ,Corporate Lists Report,"This provides only the active GTIN's and Price groups present within
+corporate lists since the time it was created. Pricing Analysts should be able to
+export all or current or removed items for regional or specific division shed
+location.","In Q1 2023, 85% of active GTINs showed consistent pricing, while 15% required adjustments due to Discount Rate variations. The report also highlights Price Elasticity trends, with a 12% increase in demand for discounted items.","{
+  ""App Name"": ""Corporate Lists Report,
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/corporate-list-reports""
+}"
+Report ,Discrepancy Reports,"Reports will allow users to locate price discrepancies within CPG, Spread and
+Parity Groups with the ability to specify various filter options while running the
+reports"," In Q1 2023, the report identified discrepancies in 8% of items, with Price Elasticity variations of up to 12%. Discount Rates averaged 15%, and Price Parity issues were resolved for 90% of flagged items.","{
+  ""App Name"": ""Discrepancies Report"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/price-discrepancies""
+}"
+Report ,Sales Report,"Trended Customer KPIs and Market Share across total Enterprise, Divisions,
+MSAs and stores.","In Q1 2023, Sales Revenue reached $12.5M, with 100,000 units sold. The Sell-Through Rate was 80%, and Inventory Turnover improved to 10 times. Customer Engagement increased by 15%, and the Average Basket Size was $40. Market Share grew by 5% in key regions.","{
+  ""App Name"": ""DivDash"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/trended-kpis""
+}"
+Report ,"Enhanced L12_ 4 1 Week Market
+Share Report","Understand Market Share trends for the latest 12, 4, and 1 week time frames by product group or division. (Goes to Commodity level, updated every Monday)."," In the latest 12-week period, Market Share increased by 6% in the Beverages category and 4% in Snacks. The Grocery division saw a 7% growth, while the total Enterprise achieved a 5% increase in Market Share.","{
+  ""App Name"": ""Enhanced L12_ 4 1 Week Market
+Share Report"",
+  ""Topic"": ""Market Share"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/market-share-trends""
+}"
+Report ,"Floor, Ceiling & MAP Definition
+Report","Pricing Analysts will be able to view existing Floor, Ceiling and MAP assignments
+for GTINs and Price Groups across different commodities and program types for
+both B&M and Regional modality. They also have an ability to export the data in
+a spreadsheet","In Q1 2023, 90% of items adhered to pricing guidelines, while 10% required adjustments due to Price Elasticity variations. Discount Rates averaged 15%, and Price Parity issues were resolved for 95% of flagged items. Analysts exported data for 500 GTINs and 200 Price Groups across 10 commodities.","{
+  ""App Name"": ""Floor, Ceiling, and MAP Assignments Report"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/floor-ceiling-map-assignments""
+}"
+Report ,"Floor, Ceiling & MAP Discrepancy
+Report","Pricing Analyst will be able to download a report for Floor, Ceiling and MAP
+discrepancies for non-program and program items comparing against regular
+retail for different B&M Divisions","In Q1 2023, discrepancies were identified in 7% of items, with Discount Rates averaging 12%. Price Elasticity variations were observed in 15% of non-program items and 10% of program items. Analysts resolved 90% of discrepancies for B&M Divisions, with 500 items flagged for review.","{
+  ""App Name"": ""Floor, Ceiling, and MAP Discrepancies Report"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/floor-ceiling-map-discrepancies""
+}"
+Report ,FunLo Migration,Trended views of customer migration by Functional Loyalty.,"In Q1 2023, 15% of customers migrated to higher loyalty tiers, driving a 10% increase in Sales Revenue. Units Sold grew by 8%, and the Sell-Through Rate improved to 78%. Customer Engagement increased by 12%, and the Average Basket Size reached $45. Inventory Turnover improved by 10%.","{
+  ""App Name"": ""FunLo Migration"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/customer-migration-loyalty""
+}"
+Report ,Internal Price Checks Logs,A report that shows the submission status of requested internal price checks.,"n Q1 2023, 95% of requested internal price checks were submitted on time, with 5% delayed due to data discrepancies. Price Elasticity variations were observed in 10% of checks, and Discount Rates averaged 12%. Analysts resolved 90% of flagged issues within 48 hours.","{
+  ""App Name"": ""Internal Price Checks Logs"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/internal-price-checks""
+}"
+Report ,"Item Assortment Report for
+Regional Sheds","This report provides list of item assortments present across different shed
+locations for a region. Today we get items from RMS through vendor API. We do
+store all the items from RMS and SFP to provide a consolidated item assortment
+details to our pricing users","In Q1 2023, the report included 10,000 items from RMS and 5,000 items from SFP across 50 shed locations. Assortment Mix showed a 15% increase in high-performing categories, while Stock-On-Hand levels improved by 8%. Price Elasticity variations were observed in 12% of items, and Discount Rates averaged 10%.","{
+  ""App Name"": ""Item Assortment Report for
+Regional Sheds"",
+  ""Topic"": ""Promotions, Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/consolidated-item-assortment""
+}"
+Report ,Merch Reporting,"The central repository for Merchandising Reporting in Power BI, this suite of
+reports upgrades legacy KCMS reports with modern data sources and new
+visualization capabilities","In Q1 2023, Sales Revenue reached $15M, with 120,000 units sold. The Sell-Through Rate improved to 80%, and Inventory Turnover increased by 10%. The suite provided visualizations for 20 legacy KCMS reports, with 95% user satisfaction.","{
+  ""App Name"": ""Merchandising Reporting Suite in Power BI"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/merchandising-reporting-suite""
+}"
+Report ,Merchandising Category Structures & Attributes,"A behavioral analysis of customer shopping patterns that helps identify how
+households are shopping a given category. The analysis creates a hierarchy of
+product attributes that motivate purchase decisions.","In Q1 2023, 60% of households prioritized price as the top motivator for purchase decisions, while 25% focused on brand loyalty. Customer Engagement increased by 12%, and the Average Basket Size reached $50. The analysis identified 5 key product attributes driving 80% of category sales.","{
+  ""App Name"": ""Merchandising Category Structures & Attributes,
+  ""Topic"": ""Assortment"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/customer-shopping-patterns""
+}"
+Report ,New Item Tracker,"Sales performance summary of new items launched during KOMPASS events in the latest 13 periods, including multiple levels of aggregation for review.","In the latest 13 periods, new items launched during KOMPASS events generated $8M in Sales Revenue, with 60,000 units sold. The Sell-Through Rate was 75%, and Inventory Turnover improved by 12%. Top-performing categories included Beverages (20% growth) and Snacks (15% growth).","{
+  ""App Name"": ""New Item Tracker"",
+  ""Topic"": ""Assortment"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/sales-performance-new-items""
+}"
+Report ,PDim Migration,Trended views of customer migration by Price Dimension.,"In Q1 2023, 20% of customers migrated to higher price tiers, driving a 15% increase in Sales Revenue. Units Sold grew by 10%, and the Sell-Through Rate improved to 80%. Customer Engagement increased by 12%, and the Average Basket Size reached $55. Price Elasticity variations were observed in 10% of items, and Discount Rates averaged 12%.","{
+  ""App Name"": ""PDim Migration"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/customer-migration-price-dimension""
+}"
+Report ,Plan Evaluation Tool,"Report providing an evaluation of the upcoming promotion plan. It uses twelve upcoming weeks of promotions from ESP to provide recommendations to improve dollars, units, or margin. Refreshed daily.","In the upcoming 12 weeks, promotions are projected to increase Sales Revenue by $10M, with a 5% improvement in Margin %. Promotion Effectiveness is expected to reach 20%, and Weekly Ad Performance is forecasted to drive a 15% increase in customer traffic. Analysts recommended adjustments to 30% of promotions to optimize dollars, units, and margin.","{
+  ""App Name"": ""Plan Evaluation Tool"",
+  ""Topic"": ""Promotions"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/upcoming-promotion-plan""
+}"
+Report ,POG View,"POG-level data to understand size, version and distribution difference as well as shelf and store level KPIs for POGs.","In Q1 2023, POG-level data showed a 10% increase in shelf efficiency across 500 stores. Version differences were identified in 15% of POGs, and distribution discrepancies were resolved for 90% of flagged items. Shelf-level KPIs improved by 12%, and store-level KPIs showed a 10% increase in sales performance.","{
+  ""App Name"": ""POG view"",
+  ""Topic"": ""Assortment"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/pog-level-data""
+}"
+Report ,POS Post Assortment Analysis Tracker,"An automated and standardized post-KOMPASS update deliverable, using Point of Sale transaction data.","In Q1 2023, the post-KOMPASS update included 50,000 Point of Sale transactions, showing a 12% increase in sales for updated categories. Top-performing items achieved a 20% growth in units sold, while Stock-On-Hand levels improved by 8%. The update resolved discrepancies in 95% of flagged items.","{
+  ""App Name"": ""POS Post Assortment Analysis Tracker"",
+  ""Topic"": ""Assortment"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/post-kompass-update""
+}"
+Report ,POS Post Assortment Analysis Tracker - Summary File,A high level summary of Sales for total category and assortment classification for every POS PAAT delivered.,"In Q1 2023, total category sales reached $25M, with 200,000 units sold. The Sell-Through Rate improved to 85%, and Inventory Turnover increased by 10%. Assortment Mix showed a 15% increase in high-performing categories, while Stock-On-Hand levels improved by 8%.","{
+  ""App Name"": ""POS Post Assortment Analysis Tracker - Summary File"",
+  ""Topic"": ""Assortment"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/sales-summary""
+}"
+Report ,Pre-KOMPASS,"This report provides product attribute trends driving category performance. For a chosen category users can see top/bottom performing attribute groups and also compare performance, productivity and customer metrics.","In Q1 2023, top-performing attribute groups drove 70% of category sales, with a 15% increase in Customer Engagement. The Average Basket Size reached $50, and Customer KPIs improved by 10%. Bottom-performing groups showed a 5% decline in productivity, with actionable insights provided for improvement.","{
+  ""App Name"": ""Product Attribute Trends Report"",
+  ""Topic"": ""Assortment"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/product-attribute-trends""
+}"
+Report ,Price & Promo Contextual Metrics,"Report providing EPG-level (formerly RBP) metrics used in promotion planning in a tabular format. Metrics are updated quarterly and include elasticity, list score, VPS score, ICBM score, Matrix classification, Hispanic index, and store segmentation index.","In Q1 2023, EPG-level metrics showed a 12% increase in Promotion Effectiveness, with elasticity scores improving by 8%. List Score averaged 85, VPS Score reached 90, and ICBM Score improved by 10%. Matrix classification updates were applied to 95% of items, and the Hispanic Index showed a 15% increase in targeted regions.","{
+  ""App Name"": ""Price & Promo Contextual Metrics"",
+  ""Topic"": ""Promotions"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/Price & Promo Contextual Metrics""
+}"
+Report ,Competitor Price Analysis,Report shows detailed list of competitor prices and does a competitor price analysis.,"[Electronics]  
+Product ID: 2001 | Product Name: Wireless Headphones | Your Price: $49.99 | Competitor A: $54.99 | Competitor B: $47.99 | Competitor C: $52.99  
+Product ID: 2002 | Product Name: Smartwatch | Your Price: $89.99 | Competitor A: $94.99 | Competitor B: $87.49 | Competitor C: $92.99  
+Product ID: 2003 | Product Name: Bluetooth Speaker | Your Price: $39.99 | Competitor A: $44.99 | Competitor B: $37.99 | Competitor C: $41.99  
+
+[Grocery]  
+Product ID: 3001 | Product Name: Cereal Box (500g) | Your Price: $4.99 | Competitor A: $5.49 | Competitor B: $4.79 | Competitor C: $5.29  
+Product ID: 3002 | Product Name: Whole Milk (1 gal) | Your Price: $3.79 | Competitor A: $3.99 | Competitor B: $3.89 | Competitor C: $3.69  
+Product ID: 3003 | Product Name: Rice (5 lbs) | Your Price: $7.49 | Competitor A: $7.99 | Competitor B: $7.29 | Competitor C: $7.79  
+Product ID: 3004 | Product Name: Orange Juice (1L) | Your Price: $3.99 | Competitor A: $4.29 | Competitor B: $3.89 | Competitor C: $4.19  
+
+[Bakery]  
+Product ID: 4001 | Product Name: Bread Loaf | Your Price: $2.49 | Competitor A: $2.59 | Competitor B: $2.39 | Competitor C: $2.69  
+Product ID: 4002 | Product Name: Large Eggs (12ct) | Your Price: $3.29 | Competitor A: $3.49 | Competitor B: $3.19 | Competitor C: $3.59  
+Product ID: 4003 | Product Name: Butter (1 lb) | Your Price: $4.79 | Competitor A: $5.19 | Competitor B: $4.99 | Competitor C: $4.89  
+
+[Garments]  
+Product ID: 5001 | Product Name: Men's Cotton T-Shirt | Your Price: $12.99 | Competitor A: $14.49 | Competitor B: $11.79 | Competitor C: $13.19  
+Product ID: 5002 | Product Name: Women's Jeans | Your Price: $29.99 | Competitor A: $34.99 | Competitor B: $27.99 | Competitor C: $31.49  
+Product ID: 5003 | Product Name: Hoodie (Unisex) | Your Price: $39.99 | Competitor A: $44.99 | Competitor B: $37.99 | Competitor C: $41.99  
+","{
+  ""App Name"": ""Competitor Price Analysis"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""https://www.sba.gov/business-guide/plan-your-business/market-research-competitive-analysis""
+}"
+Report ,Promo Activity Report,"Report providing insights pertaining to the amount of promotional activity happening at Kroger (with metrics aggregated across standard dimensions such as time, geographies, and product sets). Refreshed following the close of each fiscal period.","In Q1 2023, promotional activity at Kroger drove a 15% increase in Sales Revenue, with 100,000 additional units sold. Promotion Effectiveness reached 20%, and Weekly Ad Performance improved by 12%. Metrics were aggregated across 10 geographies and 50 product sets, with 95% accuracy in data reporting.","{
+  ""App Name"": ""Promo Activity Report"",
+  ""Topic"": ""Promotions"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/Promo Activity Report""
+}"
+Report ,Promo Effectiveness Report,"Report providing insights pertaining to the effectiveness of promotional activity happening at Kroger (with metrics aggregated across standard dimensions such as time, geographies, and product sets). Refreshed following the close of each fiscal period.","In Q1 2023, promotional activity at Kroger drove a 15% increase in Sales Revenue, with 100,000 additional units sold. Promotion Effectiveness reached 20%, and Weekly Ad Performance improved by 12%. Metrics were aggregated across 10 geographies and 50 product sets, with 95% accuracy in data reporting.
+","{
+  ""App Name"": ""Promo Effectiveness Report"",
+  ""Topic"": ""Promotions"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/promo-effectiveness""
+}"
+Report ,Regional Data Discrepancy Report,"A report that identifies discrepancies in item attributes, retails and costs between RBP and NEXT.","In Q1 2023, 8% of items showed discrepancies in item attributes, retails, and costs between RBP and NEXT. Price Elasticity variations were observed in 12% of flagged items, and Discount Rates averaged 10%. Analysts resolved 90% of discrepancies, ensuring data consistency across regions.","{
+  ""App Name"": ""Regional Data Discrepancy Report"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/regional-data-discrepancy""
+}"
+Report ,RPO Run Delivery Status Dashboard,To monitor RPO in-market and objective run delivery status for Monday and Tuesday.,"In Q1 2023, the RPO Run Delivery Status Dashboard showed a 95% on-time delivery rate for Monday and Tuesday runs. Price Elasticity variations were observed in 10% of items, and Discount Rates averaged 12%. Analysts resolved 90% of flagged issues within 24 hours.","{
+  ""App Name"": ""RPO Run Delivery Status Dashboard"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/rpo-run-delivery-status""
+}"
+Report ,RPO Value Tracking,A report that shows the incremental value delivered and the adherence to suggested retails for RPO optimizations.,"In Q1 2023, RPO optimizations delivered an incremental value of $5M, with 90% adherence to suggested retails. Price Elasticity variations were observed in 10% of items, and Discount Rates averaged 12%. Analysts resolved 95% of flagged issues, ensuring optimal pricing across 500 stores.","{
+  ""App Name"": ""RPO Value Tracking"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/rpo-optimizations-value""
+}"
+Report ,SNAP - Standard KPIs,This report provides quarterly insights on SNAP customer metrics across modalities like pickup and in-store.,"In Q1 2023, SNAP customer metrics showed a 10% increase in Customer Engagement, with a 15% rise in Average Basket Size. Customer KPIs improved by 12%, and pickup modality accounted for 60% of SNAP transactions. In-store modality saw a 5% growth in customer retention.","{
+  ""App Name"": ""SNAP - Standard KPIst"",
+  ""Topic"": ""SNAP"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/snap-customer-metrics""
+}"
+Report ,Stabilized Performance Tracking,"This tool evaluates the latest 12 week $ Sales trend pattern, comparing direction and magnitude to ROM at the Commodity and Division level.","In the latest 12 weeks, $ Sales trends showed a 10% increase compared to ROM at the Commodity level and a 12% increase at the Division level. Units Sold grew by 8%, and the Sell-Through Rate improved to 80%. Inventory Turnover increased by 10%, with 95% accuracy in trend analysis.","{
+  ""App Name"": ""Stabilized Performance Tracking"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/Stabilized Performance Tracking""
+}"
+Report ,TED Report,"A report that delivers competitor spreads, data and visualizations for various pricing programs.","In Q1 2023, competitor spreads showed a 10% variation in pricing, with Price Elasticity variations observed in 15% of items. Discount Rates averaged 12%, and visualizations highlighted 20% higher pricing in key competitor categories. Analysts resolved 90% of flagged discrepancies.","{
+  ""App Name"": ""TED Report"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/ted-report""
+}"
+Report ,Trigger Report,There are two versions of this report via the link to the Live Report and Trend Report. Both reports are used to monitor activity regarding how many price suggestions triggers are needing to be reviewed and processed and how long it takes to respond to triggers.,"In Q1 2023, 500 price suggestion triggers were reviewed, with an average response time of 24 hours. Price Elasticity variations were observed in 10% of triggers, and Discount Rates averaged 12%. Analysts resolved 95% of triggers, ensuring optimal pricing across 1,000 stores.","{
+  ""App Name"": ""Trigger Report"",
+  ""Topic"": ""Pricing"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/trigger-report""
+}"
+Report ,Weekly Ad Report,Report providing metrics and insights regarding the performance of the weekly ad (both at an aggregate level and by the individual RBPs featured). Refreshed on a weekly cadence.,"In the latest week, the weekly ad drove a 15% increase in Sales Revenue, with 50,000 additional units sold. Customer KPIs improved by 10%, and Report Accuracy reached 98%. Data Consistency was maintained at 95%, with insights provided for 20 RBPs featured in the ad.","{
+  ""App Name"": ""Weekly Ad Report"",
+  ""Topic"": ""Promotions"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/weekly-ad-report""
+}"
+Report ,Weekly Digital Deals,Results of Weekly Digital Deals (formerly HDOs) summarized by time frame and product hierarchy.,"In the latest week, Weekly Digital Deals drove a 12% increase in Sales Revenue, with 30,000 additional units sold. Top-performing categories included Beverages (20% growth) and Snacks (15% growth). Metrics were summarized across 10 product hierarchies and 5 time frames, with 95% accuracy in data reporting.","{
+  ""App Name"": ""Weekly Digital Deals"",
+  ""Topic"": ""Promotions"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/weekly-digital-deals""
+}"
+Report ,Weekly KPI Report,"An automated weekly data feed that displays KPIs for the latest 1, 4 and 12 weeks across enterprise, division and categories.","In the latest 12 weeks, Sales Revenue reached $25M, with 200,000 units sold. The Sell-Through Rate improved to 85%, and Inventory Turnover increased by 10%. Assortment Mix showed a 15% increase in high-performing categories, while Stock-On-Hand levels improved by 8%.","{
+  ""App Name"": ""Weekly KPI Report"",
+  ""Topic"": ""Performance"",
+  ""Type"": ""Report"",
+  ""Link"": ""example.com/weekly-kpi-report""
+}"
+App,Ohio Liqour Dashboard,Ohio Liquor Dashboard provides a react UI incorporating a searchable table for viewing and filtering through Ohio Liquor data.,"In Q1 2023, the Ohio Liquor Dashboard tracked sales data for 500+ liquor products. Top-selling products included Bourbon (25% of total sales) and Vodka (20% of total sales). Users filtered data by region, store, and product category, with 95% accuracy in data reporting.","{
+  ""App Name"": ""Ohio Liquor Dashboard"",
+  ""Topic"": ""Liquor Data"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/ohio-liquor-dashboard""
+}"
+App,Global Message Service (GMS),Allows a User to schedule messages for any application that is registered within MX space.,"In Q1 2023, the Global Message Service (GMS) scheduled 10,000 messages across 50+ applications. Message delivery success rate was 98%, with an average response time of 2 seconds. Users reported a 95% satisfaction rate with the scheduling and delivery features.","{
+  ""App Name"": ""Global Message Service (GMS)"",
+  ""Topic"": ""Messaging"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/global-message-service""
+}"
+App,WIC Management,Allows Kroger associates to monitor and address items eligible for WIC benefits in our stores.,"In Q1 2023, the WIC Management app tracked compliance for 10,000+ WIC transactions, with a 95% adherence rate to program guidelines. Customer engagement increased by 12%, and the Average Basket Size for WIC participants reached $50. The app also flagged 5% of transactions for review, ensuring 100% accuracy in reporting.","{
+  ""App Name"": ""WIC Management"",
+  ""Topic"": ""WIC Program"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/wic-management""
+}"
+App,Item Management Experience,Experience where product and item information is created and managed for the enterprise.,"In Q1 2023, the Item Management Experience app facilitated the creation and management of 50,000+ products and items across the enterprise. Data accuracy improved by 15%, and 95% of item updates were completed within 24 hours. The app also enabled the addition of 10 new product categories, driving a 12% increase in inventory efficiency.","{
+  ""App Name"": ""Item Management Experience"",
+  ""Topic"": ""Product and Item Management"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/item-management-experience""
+}"
+App,Digital-Ads Event Priority,Create event priority of Digital-Ads for all divisions.,"In Q1 2023, the Digital-Ads Event Priority app created event priorities for 500+ digital ads across all divisions. Top-performing ads achieved a 20% increase in customer engagement, and 95% of ads were delivered on schedule. The app also identified 10 high-priority events, driving a 15% improvement in ad performance.","{
+  ""App Name"": ""Digital-Ads Event Priority"",
+  ""Topic"": ""Digital Advertising"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/digital-ads-event-priority""
+}"
+App,Item Watchtower,Lookup the Status of a Product at a specific Kroger Location.,"In Q1 2023, the Item Watchtower app tracked the status of 10,000+ products at 500 Kroger locations. Data accuracy reached 98%, and 95% of product status updates were completed in real-time. The app flagged 5% of items for review, ensuring 100% compliance with inventory guidelines.","{
+  ""App Name"": ""Item Watchtower"",
+  ""Topic"": ""Product Status Tracking"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/item-watchtower""
+}"
+App,Family Tree Management,View and browse Kroger's item Family Tree data.View and browse Kroger's item Family Tree data.,"In Q1 2023, the Family Tree Management app provided insights into Kroger's item Family Tree data for 50,000+ products. Users browsed and analyzed data with 95% accuracy, and 10 new family tree relationships were identified. The app also improved data consistency by 12%, enabling better decision-making.","{
+  ""App Name"": ""Family Tree Management"",
+  ""Topic"": ""Item Family Tree Data"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/family-tree-management""
+}"
+App,Product Variants,"The tool to create, edit and manage Product Variant Groups.","In Q1 2023, the Product Variants app enabled the creation and management of 5,000+ Product Variant Groups. Data accuracy improved by 15%, and 95% of edits were completed within 24 hours. The app also facilitated the addition of 10 new variant types, driving a 12% increase in product catalog efficiency.","{
+  ""App Name"": ""Product Variants"",
+  ""Topic"": ""Product Variant Management"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/product-variants""
+}"
+App,MX Compliance,"This central repository houses all of Kroger's restrictions, fees, and bans.","In Q1 2023, the MX Compliance app housed 10,000+ restrictions, fees, and bans across Kroger's operations. Compliance accuracy reached 98%, and 95% of updates were processed in real-time. The app flagged 5% of items for review, ensuring 100% adherence to regulatory guidelines.","{
+  ""App Name"": ""MX Compliance"",
+  ""Topic"": ""Compliance Management"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/mx-compliance""
+}"
+App,Switchboard,Manage online availability through Web Overrides and Unsellable Family Tree.,"In Q1 2023, the Switchboard app managed online availability for 20,000+ products through Web Overrides and Unsellable Family Tree. Data accuracy reached 95%, and 90% of updates were completed in real-time. The app improved online product availability by 10%, driving a 15% increase in customer satisfaction.","{
+  ""App Name"": ""Switchboard"",
+  ""Topic"": ""Online Availability Management"",
+  ""Type"": ""Application"",
+  ""Link"": ""example.com/switchboard""
+}"
+App, Retail Price Management System ,"Help formulate price adjustment strategies for an item and product category. Help establish a new pricing rule for specific store location and provides a view of how the org does as compared to competitors on the same category while applying rules. This app helps retail teams formulate price adjustment strategies at both item and category levels, ensuring competitive pricing across locations. It enables users to set dynamic pricing rules for specific stores, compare organizational performance vs. competitors, and apply real-time adjustments based on market trends.","Price Adjustment Strategy App: Quick Guide
+1. Log In
+Open the app and log in with your credentials.
+2. Dashboard
+View key metrics: current pricing, competitor trends, and alerts.
+3. Adjust Prices
+For an Item:
+Go to Items tab.
+Search for the item.
+View competitor prices and trends.
+Click Adjust Price and enter the new price or use Auto-Adjust.
+For a Category:
+Go to Categories tab.
+Select the category.
+View performance vs. competitors.
+Apply bulk price adjustments or set rules.
+4. Set Pricing Rules for a Store
+Go to Store Rules.
+Select the store location.
+Create rules (e.g., ""Match competitor prices"" or ""Discount by 5% during sales"").
+Save and apply.
+5. Compare vs. Competitors
+Go to Competitor Analysis.
+Select a category or item.
+View how your prices compare and adjust if needed.
+6. Real-Time Adjustments
+Enable Auto-Adjust to let the app update prices based on market trends.","{
+  ""App Name"": ""Retail Price Management System"" ,
+  ""Topic"": ""Retail Price Management System"",
+  ""Type"": ""Application"",
+  ""Link"": ""https://nielseniq.com/global/en/products/retail-price-optimization/""
+}"
+Report,Price Change Impact Report,"A Price Change Impact Report analyzes sales and margin effects before and after price adjustments, considering customer reactions and competitor responses. It leverages historical trends to forecast future pricing outcomes.","Based on your pricing test, a $0.50 increase in egg prices led to a 3% drop in sales and a 1% reduction in margins, highlighting price sensitivity and helping analysts refine pricing strategies.","{
+  ""App Name"": ""Price Change Impact Report"" ,
+  ""Topic"": ""Price Change Impact Report"",
+  ""Type"": ""Application"",
+  ""Link"": ""https://nielseniq.com/global/en/products/retail-price-optimization/""
+}"
