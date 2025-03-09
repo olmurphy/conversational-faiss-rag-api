@@ -44,7 +44,7 @@ CACHE_HIT_LATENCY = Summary(
 CACHE_MISS_LATENCY = Summary(
     'cache_miss_latency_seconds', 'Cache Miss Latency', ['method', 'endpoint']
 )
-USAGE = Gauge('cpu_usage_percent', 'CPU Usage Percentage')
+CPU_USAGE = Gauge('cpu_usage_percent', 'CPU Usage Percentage')
 MEMORY_USAGE = Gauge('memory_usage_percent', 'Memory Usage Percentage')
 THREAD_COUNT = Gauge('thread_count', 'Number of Threads')
 GC_EVENTS = Counter('gc_events_total', 'Total Garbage Collection Events')
