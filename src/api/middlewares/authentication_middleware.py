@@ -69,7 +69,6 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             self.logger.debug({"message": "No Authorization header found, checking session id"})
             session_id = request.headers.get(SESSION_ID_HEADER)
             if session_id:
-                print("We are here")
                 token = self.redis_auth.get_access_token(session_id=session_id)
 
         if not token:

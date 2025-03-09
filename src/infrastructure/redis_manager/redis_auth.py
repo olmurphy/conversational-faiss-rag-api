@@ -76,9 +76,12 @@ class RedisAuth:
         Returns:
             The access token, or None if not found.
         """
+        key = "chat-widget_dev_" + session_id
         try:
             with self._get_redis_connection() as redis_conn:
-                session_data = redis_conn.get("chat-widget_dev_" + session_id)
+                self.logger.debug({"message": "fetching access token from redis", "data": key})
+
+                session_data = redis_conn.get(key)
                 if session_data:
                     session_dict = json.loads(session_data)
                     return session_dict.get("accessToken")

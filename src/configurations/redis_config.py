@@ -68,14 +68,19 @@ class RedisConfig:
                 ssl_cert_reqs="required",
             )
             return redis_pool
-        except (redis.exceptions.ConnectionError, ValueError) as e:
+        except (redis.exceptions.ConnectionError, ValueError, FileNotFoundError) as e:
             self.logger.error(
                 {
                     "message": "Error connecting to Redis Instance",
-                    "data": {"host": host, "port": port, db: db, "cert_path": self.redis_cert_path,},
-                    "error": e,
+                    "data": {
+                        "host": host if 'host' in locals() else None,
+                        "port": port if 'port' in locals() else None,
+                        "db": db if 'db' in locals() else None,
+                        "cert_path": self.redis_cert_path,
+                    },
+                    "error": e
                 }
-            )  # logging for error.
+            )
 
             return None
 
