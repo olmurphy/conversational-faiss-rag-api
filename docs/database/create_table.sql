@@ -29,7 +29,6 @@ CREATE TABLE user_interactions (
     clicks INTEGER,
     scroll_depth FLOAT,
     number_of_turns INTEGER,
-    chat_history JSONB, -- Added chat_history column
     PRIMARY KEY (interaction_id)
 );
 

@@ -24,10 +24,8 @@ from api.middlewares.authentication_middleware import AuthenticationMiddleware
 
 def create_app(context: AppContext) -> FastAPI:
     app = FastAPI(
-        openapi_url="/documentation/json",
-        docs_url="/documentation",  # Add this line for Swagger UI
         redoc_url=None,
-        title="krogerMX",
+        title=context.env_vars.SERVICE_NAME,
         version="0.0.1",
     )
     app.add_middleware(AppContextMiddleware, app_context=context)
@@ -91,7 +89,7 @@ if __name__ == "__main__":
 
     logger.info(
         {
-            "message": f"OpenAPI specs can be found at http://localhost:{app_context.env_vars.PORT}/documentation"
+            "message": f"OpenAPI specs can be found at http://localhost:{app_context.env_vars.PORT}/docs"
         }
     )
 

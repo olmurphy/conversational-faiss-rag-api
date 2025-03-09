@@ -31,7 +31,6 @@ class UserSession:
         2. If cache miss → load from Postgres
         3. Update Redis (avoid thundering herd problem)
         """
-        cache_key = f"{SESSION_KEY_PREFIX}{session_id}{CHAT_HISTORY_KEY_SUFFIX}"
         cached_data = self.redis_session.get_chat_history(session_id=session_id)
 
         if cached_data:
