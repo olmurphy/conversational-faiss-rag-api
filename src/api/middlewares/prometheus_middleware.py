@@ -87,7 +87,7 @@ SERVICE_AVAILABILITY = Gauge('service_availability', 'Service Availability')
 ACTIVE_USERS = Gauge('active_users', 'Number of Active Users')
 SESSION_DURATION = Summary('session_duration_seconds', 'User Session Duration')
 
-cclass PrometheusMiddleware(BaseHTTPMiddleware):
+class PrometheusMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         method = request.method
         endpoint = request.url.path
