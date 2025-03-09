@@ -83,3 +83,15 @@ class RedisConfig:
         if self._redis_client is None:
             self._redis_client = self._create_redis_client()
         return self._redis_client
+
+    def check_health(self) -> bool:
+        """Checks if the Redis connection is healthy."""
+        redis_pool = self.get_redis_client()
+        if not redis_pool:
+            return False
+        try:
+            with redis.Redis(connection_pool=redis_pool) as redis_client:
+                return redis_client.ping()  # Pings the Redis server
+        except redis.exceptions.RedisError as e:
+            self.logger.error({"message": "Redis health check failed", "error": str(e)})
+            return False

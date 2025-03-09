@@ -1,10 +1,15 @@
+import asyncio
 import os
 
 import uvicorn
+from fastapi import FastAPI
+from fastapi.middleware.gzip import GZipMiddleware
+
 from api.controllers.core.liveness import liveness_handler
 from api.controllers.core.readiness import readiness_handler
 from api.controllers.rag_handler import rag_handler
 from api.middlewares.app_context_middleware import AppContextMiddleware
+from api.middlewares.authentication_middleware import AuthenticationMiddleware
 from api.middlewares.error_handling_middleware import ErrorHandlingMiddleware
 from api.middlewares.logger_middleware import LoggerMiddleware
 from configurations.configuration import get_configuration
@@ -12,20 +17,15 @@ from configurations.postgres_config import PostgresDBConfig
 from configurations.redis_config import RedisConfig
 from configurations.variables import get_variables
 from context import AppContext, AppContextParams
-from fastapi import FastAPI
-from fastapi.middleware.gzip import GZipMiddleware
+from infrastructure.redis_manager.health_checks import redis_health_check_task
 from infrastructure.logger import get_logger
 from infrastructure.postgres_db_manager.postgres_session import PostgresSession
-from infrastructure.redis_manager.redis_session import RedisSession
 from infrastructure.redis_manager.redis_auth import RedisAuth
-
-from api.middlewares.authentication_middleware import AuthenticationMiddleware
+from infrastructure.redis_manager.redis_session import RedisSession
 
 
 def create_app(context: AppContext) -> FastAPI:
     app = FastAPI(
-        openapi_url="/documentation/json",
-        docs_url="/documentation",  # Add this line for Swagger UI
         redoc_url=None,
         title="krogerMX",
         version="0.0.1",
@@ -75,7 +75,6 @@ if __name__ == "__main__":
         redis_config, expiration=configurations.redis.time_to_live
     )  # Initialize RedisSession
     redis_auth = RedisAuth(redis_config=redis_config)
-    
 
     app_context = AppContext(
         params=AppContextParams(
@@ -83,10 +82,21 @@ if __name__ == "__main__":
             env_vars=env_vars,
             configurations=configurations,
             redis_session=redis_session,
-            redis_auth=redis_auth
+            redis_auth=redis_auth,
         )
     )
     application = create_app(app_context)
+
+    logger.info(
+        {
+            "message": f"OpenAPI specs can be found at http://localhost:{app_context.env_vars.PORT}/documentation"
+        }
+    )
+
+    @application.on_event("startup")
+    async def startup_event():
+        """Starts the Redis health check task."""
+        asyncio.create_task(redis_health_check_task(redis_config))
 
     logger.info(
         {
