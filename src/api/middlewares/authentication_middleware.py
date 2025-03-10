@@ -6,7 +6,7 @@ import jwt
 from context import AppContext
 from fastapi import FastAPI, HTTPException, Request
 from starlette.middleware.base import BaseHTTPMiddleware
-from api.middlewares.logger_middleware import SESSION_ID_HEADER
+from api.middlewares.logger_middleware import CACHE_SESSION_ID_HEADER
 
 
 exclude_paths = ["/documentation", "/docs", "/openapi.json", "/readiness", "/liveness", "/favicon.ico"]
@@ -51,9 +51,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             raise ValueError("RedisAuth is not initialized in the context")
 
     async def dispatch(self, request: Request, call_next: Callable):
-        self.logger.debug({"message": f"AuthenticationMiddleware: Intercepting request {request.method} {request.url.path}"})
         if any(request.url.path.startswith(path) for path in exclude_paths):
-            self.logger.debug(f"Excluded path: {request.url.path}")
             return await call_next(request)
         
 
@@ -66,8 +64,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             self.logger.debug({"message": "Token found in Authorization header"})
         else:
             # If no Authorization header, try session id from redis
-            self.logger.debug({"message": "No Authorization header found, checking session id"})
-            session_id = request.headers.get(SESSION_ID_HEADER)
+            session_id = request.headers.get(CACHE_SESSION_ID_HEADER)
             if session_id:
                 token = self.redis_auth.get_access_token(session_id=session_id)
 

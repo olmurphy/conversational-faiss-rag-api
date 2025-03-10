@@ -100,3 +100,10 @@ my-venv/
 */*.swp
 */*/*.swp
 */*/*/*.swp
+
+# in-memory data for testing
+src/data/
+src/data/**/*/
+src/data/**/*.*
+src/data/**/*/*/
+src/data/**/*/*.*
