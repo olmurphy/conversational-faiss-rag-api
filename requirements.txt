@@ -3,7 +3,7 @@ uvicorn
 openai
 pydantic
 python-dotenv
-python-json-logger
+python-json-logger>=3.3.0
 attrs
 jsonschema
 faiss-cpu
@@ -19,3 +19,4 @@ numpy
 psycopg2-binary
 psutil
 pyjwt
+cryptography
