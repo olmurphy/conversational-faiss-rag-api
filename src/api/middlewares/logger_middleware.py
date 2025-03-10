@@ -132,3 +132,72 @@ class LoggerMiddleware(BaseHTTPMiddleware):
             )
 
         return response
+
+
+### Consider this
+
+# async def loggerMiddleware(request, call_next):
+#     request_id = str(uuid.uuid4())
+#     session_id = request.cookies.get("session_id", "unknown")
+#     client_ip = request.client.host if request.client else "unknown"
+#     user_agent = request.headers.get("user-agent", "unknown")
+#     referer = request.headers.get("referer", "unknown")
+#     content_type = request.headers.get("content-type", "unknown")
+#     cookies = dict(request.cookies)
+#     excluded_paths = ["/health"] # example of excluded path.
+#     request_logger = request.state.logger
+
+#     start_time = time.time()
+#     response = await call_next(request)
+#     duration = time.time() - start_time
+
+#     if request.url.path not in excluded_paths:
+#         log_entry = {
+#             "timestamp": time.strftime('%Y-%m-%dT%H:%M:%S.', time.gmtime(time.time())) + str(int((time.time() * 1000) % 1000)).zfill(3) + 'Z',
+#             "severity": "INFO",
+#             "service": os.environ.get('SERVICE_NAME', 'KrogerMX-gen-ai'),
+#             "host": socket.gethostname(),
+#             "traceId": request.headers.get("X-Cloud-Trace-Context", request_id), # example of how to get trace id from header.
+#             "spanId": str(uuid.uuid4()),
+#             "requestId": request_id,
+#             "sessionId": session_id,
+#             "http": {
+#                 "request": {
+#                     "method": request.method,
+#                     "url": str(request.url),
+#                     "userAgent": user_agent,
+#                     "ip": client_ip,
+#                     "contentType": content_type,
+#                     "cookies": cookies,
+#                     "referer": referer
+#                 },
+#                 "response": {
+#                     "status": response.status_code,
+#                     "latency": f"{duration * 1000:.2f}ms",
+#                     "contentLength": response.headers.get("content-length", 0)
+#                 }
+#             },
+#             "resource":{
+#                 "type": "process",
+#                 "labels": {
+#                     "pid": os.getpid()
+#                 }
+#             },
+#             "message": f"{request.method} {request.url.path} - {response.status_code} in {duration * 1000:.2f}ms",
+#             "resource_utilization": {
+#                 'cpu_percent': f"{psutil.cpu_percent():.2f}%",
+#                 'memory_percent': f"{psutil.virtual_memory().percent:.2f}%",
+#                 'disk_read_bytes': psutil.disk_io_counters().read_bytes,
+#                 'disk_write_bytes': psutil.disk_io_counters().write_bytes,
+#                 'network_bytes_sent': psutil.net_io_counters().bytes_sent,
+#                 'network_bytes_received': psutil.net_io_counters().bytes_recv,
+#             }
+#         }
+#         request_logger.debug(log_entry)
+
+#     response.headers[PROCESSING_TIME_HEADER] = str(duration)
+#     response.headers[REQUEST_ID_HEADER] = request_id
+#     response.headers[ROUTE_HEADER] = request.url.path
+#     response.headers[SESSION_ID_HEADER] = session_id
+
+#     return response

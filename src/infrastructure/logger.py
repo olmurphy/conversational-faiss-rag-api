@@ -125,3 +125,48 @@ def get_logger(logger_name='mialogger') -> logging.Logger:
     logger.info({"message": f"Application starting with log level: {log_level}" }) # print the log level
 
     return logger
+
+
+## Consider this 
+# class CustomJsonFormatter(logging.Formatter):
+#     def format(self, record):
+#         log_record = {
+#             "timestamp": time.strftime('%Y-%m-%dT%H:%M:%S.', time.gmtime(time.time())) + str(int((time.time() * 1000) % 1000)).zfill(3) + 'Z',
+#             "severity": LOG_LEVELS.get(record.levelno, "INFO"),
+#             "service": os.environ.get('SERVICE_NAME', 'KrogerMX-gen-ai'),
+#             "host": socket.gethostname(),
+#             "pid": os.getpid(),
+#             "traceId": getattr(record, 'request_id', str(uuid.uuid4())),
+#             "transactionId": getattr(record, 'transaction_id', str(uuid.uuid4())),
+#             "spanId": getattr(record, 'span_id', str(uuid.uuid4())),
+#             "sessionId": getattr(record, 'session_id', 'unknown'),
+#             "userId": getattr(record, 'user_id', 'unknown'),
+#             "userRole": getattr(record, 'user_role', 'unknown'),
+#             "requestPayloadSize": getattr(record, 'request_payload_size', None),
+#             "responsePayloadSize": getattr(record, 'response_payload_size', None),
+#             "event": getattr(record, 'event', 'unknown'),
+#             "location": {
+#                 "filename": getattr(record, 'filename', None),
+#                 "pathname": getattr(record, 'pathname', None),
+#                 "line": getattr(record, 'lineno', 'unknown'),
+#                 "funcName": getattr(record, 'funcName', None)
+#             },
+#             "data": getattr(record, 'data', None),
+#             "error": getattr(record, 'error', None),
+#             "message": record.getMessage(),
+#             "resource_utilization": {
+#                 'cpu_percent': psutil.cpu_percent(),
+#                 'memory_percent': psutil.virtual_memory().percent,
+#                 'disk_read_bytes': psutil.disk_io_counters().read_bytes,
+#                 'disk_write_bytes': psutil.disk_io_counters().write_bytes,
+#                 'network_bytes_sent': psutil.net_io_counters().bytes_sent,
+#                 'network_bytes_received': psutil.net_io_counters().bytes_recv,
+#             },
+#             "resource":{
+#                 "type": "process",
+#                 "labels": {
+#                     "pid": os.getpid()
+#                 }
+#             }
+#         }
+#         return json.dumps(log_record)
