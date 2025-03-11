@@ -1,11 +1,12 @@
 import json
 import time
-from typing import Dict, Optional
+from typing import Dict, List, Optional, Union
 
 import redis
 from configurations.redis_config import RedisConfig
 from infrastructure.redis_manager.util import (deserialize_message,
                                                serialize_message)
+from langchain_core.messages import AIMessage, HumanMessage
 
 SESSION_KEY_PREFIX = "session:"
 CHAT_HISTORY_KEY_SUFFIX = ":chat_history"
@@ -75,9 +76,9 @@ class RedisSession:
                 {"message": f"Failed to delete session {session_id}", "error": e}
             )
 
-    def store_chat_message(self, session_id, messages):
+    def store_chat_message(self, session_id, messages: List[Union[AIMessage, HumanMessage]]):
         key = f"{SESSION_KEY_PREFIX}{session_id}{CHAT_HISTORY_KEY_SUFFIX}"
-        try:
+        try:    
             with self._get_redis_connection() as redis_conn:
                 serialized_messages = [serialize_message(msg) for msg in messages]
                 self.logger.debug(
@@ -131,6 +132,25 @@ class RedisSession:
                 {"message": f"Failed to get chat history for {session_id}", "error": e}
             )
             return []
+        
+    def delete_chat_history(self, session_id):
+        key = f"{SESSION_KEY_PREFIX}{session_id}{CHAT_HISTORY_KEY_SUFFIX}"
+        try:
+            with self._get_redis_connection() as redis_conn:
+                self.logger.debug(
+                    {
+                        "message": f"Deleting chat history for session_id: {session_id}",
+                        "key": key,
+                    }
+                )
+                redis_conn.delete(key)
+        except redis.exceptions.RedisError as e:
+            self.logger.error(
+                {
+                    "message": f"Failed to delete chat history for {session_id}",
+                    "error": e,
+                }
+            )
 
     def acquire_lock(self, lock_name, acquire_timeout=10, lock_timeout=10):
         lock_key = f"lock:{lock_name}"

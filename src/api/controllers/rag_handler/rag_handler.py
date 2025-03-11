@@ -11,13 +11,21 @@ from api.schemas.rag_handler_schemas import (
 from application.assistance.service import AssistantService
 from context import AppContext
 from fastapi import APIRouter, Request, status
+from application.user_session.user_session import UserSession
 
 router = APIRouter()
 
 
-@router.get("/test-auth")
+@router.get("/test")
 async def test(request: Request):
-    return ""
+    request_context: AppContext = request.state.app_context
+
+    postgres_session = request_context.postgres_session
+    chat_history = postgres_session.get_chat_history(
+        "ab0e4862-846d-434e-8ff3-35b4ea8ea286"
+    )
+    return chat_history
+
 
 @router.post(
     "/ask-question/",
@@ -38,10 +46,7 @@ async def ask_question_endpoint(request: Request, chat_query: AskQuestionInputSc
     request_context: AppContext = request.state.app_context
 
     user_query = chat_query.chat_query
-    session_id = request.headers.get(SESSION_ID_HEADER)  # use the constant.
-
-    redis_session = request_context.redis_session
-    chat_history = redis_session.get_chat_history(session_id)
+    session_id = request.headers.get(SESSION_ID_HEADER)
 
     if not user_query:
         request_context.logger.error(
@@ -53,14 +58,10 @@ async def ask_question_endpoint(request: Request, chat_query: AskQuestionInputSc
             error={"code": "BAD_REQUEST", "message": "query parameter is required"},
         )
     assistant_service = AssistantService(app_context=request_context)
-    response, retrieved_docs = assistant_service.chat_completion(
-        user_query, chat_history
-    )
-    
-    redis_session.store_chat_message(session_id=session_id, messages=chat_history[-2:])
+    response, retrieved_docs, interaction_id = await assistant_service.chat_completion(user_query, session_id)
 
-    sources = format_sources(retrieved_docs)  # need to define threshold
-    
+    sources = format_sources(retrieved_docs)
+
     return format_response(
         status=status.HTTP_200_OK,
         message="Success",
@@ -71,5 +72,6 @@ async def ask_question_endpoint(request: Request, chat_query: AskQuestionInputSc
                 "generated_at": datetime.now(timezone.utc).isoformat(),
                 "model": response.response_metadata.get("model_name", "unknown"),
             },
+            "interaction_id": str(interaction_id),
         },
     )

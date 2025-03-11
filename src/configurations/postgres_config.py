@@ -38,7 +38,7 @@ class PostgresDBConfig:
 
     def _create_url(self):
         return URL.create(
-            drivername="postgresql+psycopg2",
+            drivername="postgresql+asyncpg",
             username=self.user,
             password=self.password,
             host=self.host,

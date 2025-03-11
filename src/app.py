@@ -81,14 +81,15 @@ if __name__ == "__main__":
             env_vars=env_vars,
             configurations=configurations,
             redis_session=redis_session,
-            redis_auth=redis_auth
+            redis_auth=redis_auth,
+            postgres_session=postgres_session
         )
     )
     application = create_app(app_context)
 
     logger.info(
         {
-            "message": f"OpenAPI specs can be found at http://localhost:{app_context.env_vars.PORT}/documentation"
+            "message": f"OpenAPI specs can be found at http://localhost:{app_context.env_vars.PORT}/docs"
         }
     )
 

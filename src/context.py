@@ -9,6 +9,7 @@ from configurations.variables_model import Variables
 from starlette.requests import Request
 from infrastructure.redis_manager.redis_session import RedisSession
 from infrastructure.redis_manager.redis_auth import RedisAuth
+from infrastructure.postgres_db_manager.postgres_session import PostgresSession
 
 
 class RequestContext:
@@ -47,6 +48,7 @@ class AppContextParams:
     request_context: Optional[RequestContext] = None
     redis_session: Optional[RedisSession] = None # Add this line
     redis_auth: Optional[RedisAuth] = None
+    postgres_session: Optional[PostgresSession] = None
 
 class AppContext:
     """
@@ -66,6 +68,7 @@ class AppContext:
         )
         self._redis_session = params.redis_session # Add this line
         self._redis_auth = params.redis_auth
+        self._postgres_session = params.postgres_session
 
 
     @property
@@ -99,6 +102,10 @@ class AppContext:
     @property
     def redis_auth(self):
         return self._redis_auth
+    
+    @property
+    def postgres_session(self):
+        return self._postgres_session
 
     def create_request_context(self, request_logger, request: Request = None):
         """
@@ -115,6 +122,7 @@ class AppContext:
                 request=request if request else None,
             ),
             redis_session = self._redis_session,
-            redis_auth=self._redis_auth
+            redis_auth=self._redis_auth,
+            postgres_session=self._postgres_session
         )
         return AppContext(params)

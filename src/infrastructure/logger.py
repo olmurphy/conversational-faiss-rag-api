@@ -122,6 +122,7 @@ def get_logger(logger_name='mialogger') -> logging.Logger:
 
 
     log_level = logging.getLevelName(logger.getEffectiveLevel())
+    
     logger.info({"message": f"Application starting with log level: {log_level}" }) # print the log level
 
     return logger

@@ -254,20 +254,37 @@ LLM
 .
 ├── .github/
 │   └── workflows - github define actions / workflows
+├── devops/
+│   └── kubernetes
+├── docs/
+│   └── database_design
 ├── src/
+│   ├── api/
+│   │   ├── controllers
+│   │   ├── middleware
+│   │   └── schemas
+│   ├── application/
+│   │   ├── assistant
+│   │   └── user_session/
+│   │       └── user_session.py
+│   ├── configurations - contains config.py, redis, postgres config
+│   ├── infrastructure - contains llm, embeddings, postres, redisAuth, redisSession/
+│   │   ├── postgress_db_manager/
+│   │   │   └── postgres_sesion.py
+│   │   └── redis_manager/
+│   │       └── redis_session.py
+│   ├── models
 │   ├── app.py
-│   ├── logger.py
-│   ├── redis_config.py
-│   └── redis_metrics.py
+│   └── context.py
 ├── .dockerignore
+├── .env.example
 ├── .gitignore
+├── configuration.json
 ├── Dockerfile
 ├── LICENSE
 ├── Makefile
 ├── README.md
-├── redis-cronjob.yaml
-├── requirements.txt
-└── setup.cfg
+└── requirements.txt
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

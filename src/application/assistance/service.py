@@ -1,13 +1,11 @@
 import time
 import uuid
-from typing import Any, Dict
 
 import faiss
 import numpy as np
 from application.assistance.chains.assistant_chain import AssistantChain
-from application.assistance.chains.assistant_prompt import \
-    AssistantPromptBuilder
 from application.assistance.helper import load_documents
+from application.user_session.user_session import UserSession
 from context import AppContext
 from infrastructure.embeddings_manager.embeddings_manager import \
     EmbeddingsManager
@@ -29,6 +27,11 @@ class AssistantService:
         Initialize the Assistant Service
         """
         self.app_context = app_context
+        self.user_session = UserSession(
+            redis_session=app_context.redis_session,
+            postgres_session=app_context.postgres_session,
+            logger=app_context.logger,
+        )
         self._setup_assistant()
 
     def _init_embeddings(self):
@@ -43,7 +46,7 @@ class AssistantService:
 
         # Load the LLM
         llm = self._init_llm()
-        
+
         faiss = self._setup_faiss(embeddings)
 
         self._chain = AssistantChain(
@@ -78,31 +81,38 @@ class AssistantService:
         faiss_db = FAISS(
             embedding_function=embedding_instance,
             index=index,
-            docstore=InMemoryDocstore({doc_id: doc for doc_id, doc in zip(uuids, documents)}),
+            docstore=InMemoryDocstore(
+                {doc_id: doc for doc_id, doc in zip(uuids, documents)}
+            ),
             index_to_docstore_id=index_to_docstore_id,
         )
 
-        self.app_context.logger.debug({
-            "message": "FAISS setup completed",
-            "data": {
-                "load_time": load_time,
-                "embedding_time": embedding_time,
-                "document_count": len(documents),
-            },
-            "event": "FAISS_SETUP",
-        })
+        self.app_context.logger.debug(
+            {
+                "message": "FAISS setup completed",
+                "data": {
+                    "load_time": load_time,
+                    "embedding_time": embedding_time,
+                    "document_count": len(documents),
+                },
+                "event": "FAISS_SETUP",
+            }
+        )
 
         return faiss_db
 
-    def chat_completion(
+    async def chat_completion(
         self,
         query: str,
-        chat_history: Dict[str, Any] = None,
+        session_id: str,
     ):
         """
         Chat completion using Assistant Chain
         """
+
         request_id = str(uuid.uuid4())
+        chat_history = await self.user_session.get_chat_history(uuid.UUID(session_id))
+
         self.app_context.logger.info(
             {
                 "message": "Rag generation starting",
@@ -116,12 +126,15 @@ class AssistantService:
         chat_history.append(HumanMessage(content=query))
 
         rag_start: float = time.perf_counter()
-        response, retrieved_docs = self._chain._invoke(query=query, chat_history_messages=[msg for msg in chat_history])
-        rag_time: float = time.perf_counter() - rag_start #calculate the total rag time.
-        
+        response, retrieved_docs = self._chain._invoke(
+            query=query, chat_history_messages=[msg for msg in chat_history]
+        )
+        rag_time: float = time.perf_counter() - rag_start
+
         chat_history.append(AIMessage(content=response.content))
-
-
+        interaction_id = self.user_session.store_chat_message(
+            uuid.UUID(session_id), chat_history[-2:]
+        )  # store the last 2 messages.
         self.app_context.logger.info(
             {
                 "message": "Rag model finished response",
@@ -130,11 +143,13 @@ class AssistantService:
                 "event": "RESPONSE_RECEIVED",
                 "token_usage": response.response_metadata.get("token_usage", {}),
                 "model_name": response.response_metadata.get("model_name", "unknown"),
-                "finish_reason": response.response_metadata.get("finish_reason", "unknown"),
+                "finish_reason": response.response_metadata.get(
+                    "finish_reason", "unknown"
+                ),
                 "usage_metadata": response.usage_metadata,
-                "rag_time": rag_time, #log the total rag time.
+                "rag_time": rag_time,  # log the total rag time.
                 "request_id": request_id,
             }
         )
 
-        return response, retrieved_docs
+        return response, retrieved_docs, interaction_id
