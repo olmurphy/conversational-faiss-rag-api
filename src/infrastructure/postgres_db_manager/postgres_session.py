@@ -179,10 +179,8 @@ class PostgresSession:
                     .offset(offset)
                 ).execution_options(stream_results=True)
                 results = db.execute(query).scalars().all()
-                print("find this", len(results))
                 history: List[Dict] = []
                 for row in results:
-                    print("this row:", row)
                     if row.user_query:
                         history.append(HumanMessage(content=row.user_query))
                     if row.llm_response:
