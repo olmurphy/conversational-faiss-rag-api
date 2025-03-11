@@ -20,8 +20,8 @@ class PostgresSession:
             autocommit=False, autoflush=False, bind=self.engine, class_=AsyncSession
         )
         self.logger.info({"message": "PostgreSQL connection established."})
-        event.listen(self.engine, "before_cursor_execute", self._before_cursor_execute)
-        event.listen(self.engine, "after_cursor_execute", self._after_cursor_execute)
+        event.listen(self.engine.sync_engine, "before_cursor_execute", self._before_cursor_execute) #attach to sync_engine.
+        event.listen(self.engine.sync_engine, "after_cursor_execute", self._after_cursor_execute) #attach to sync_engine.
 
     def _create_postgres_engine(self, postgres_db_config):
         engine_options = postgres_db_config.get_connection_pool_options()
@@ -222,11 +222,11 @@ class PostgresSession:
     ):
         conn.info.setdefault("query_start_time", []).append(time.time())
 
-    # def _after_cursor_execute(
-    #     self, conn, cursor, statement, parameters, context, executemany
-    # ):
-    #     start_time = conn.info.get("query_start_time", []).pop(0)
-    #     end_time = time.time()
-    #     query_execution_time.observe(end_time - start_time)
-    #     query_types.labels(query_type=statement.split(" ")[0].upper()).inc()
-    #     queries_per_second.inc()
+    def _after_cursor_execute(
+        self, conn, cursor, statement, parameters, context, executemany
+    ):
+        start_time = conn.info.get("query_start_time", []).pop(0)
+        end_time = time.time()
+        # query_execution_time.observe(end_time - start_time) # need prometheus client.
+        # query_types.labels(query_type=statement.split(" ")[0].upper()).inc()
+        # queries_per_second.inc()

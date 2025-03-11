@@ -101,7 +101,7 @@ class AssistantService:
 
         return faiss_db
 
-    def chat_completion(
+    async def chat_completion(
         self,
         query: str,
         session_id: str,
@@ -111,7 +111,7 @@ class AssistantService:
         """
 
         request_id = str(uuid.uuid4())
-        chat_history = self.user_session.get_chat_history(uuid.UUID(session_id))
+        chat_history = await self.user_session.get_chat_history(uuid.UUID(session_id))
 
         self.app_context.logger.info(
             {

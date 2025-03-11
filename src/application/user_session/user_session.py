@@ -21,7 +21,7 @@ class UserSession:
         self.postgres_session = postgres_session
         self.logger = logger
 
-    def get_chat_history(self, session_id: uuid.UUID):
+    async def get_chat_history(self, session_id: uuid.UUID):
         """
         Cache-Aside Pattern:
         1. Try Redis first
@@ -30,7 +30,7 @@ class UserSession:
         """
         request_id = uuid.uuid4()
         try:
-            cached_data = self.redis_session.get_chat_history(session_id=session_id)
+            cached_data = await self.redis_session.get_chat_history(session_id=session_id)
 
             if cached_data:
                 self.logger.debug(
@@ -48,7 +48,7 @@ class UserSession:
                     "session_id": session_id,
                 }
             )
-            chat_history = self.postgres_session.get_chat_history(session_id=session_id)
+            chat_history = await self.postgres_session.get_chat_history(session_id=session_id)
 
             if chat_history:
                 self.redis_session.store_chat_message(session_id, chat_history)

@@ -58,7 +58,7 @@ async def ask_question_endpoint(request: Request, chat_query: AskQuestionInputSc
             error={"code": "BAD_REQUEST", "message": "query parameter is required"},
         )
     assistant_service = AssistantService(app_context=request_context)
-    response, retrieved_docs, interaction_id = assistant_service.chat_completion(user_query, session_id)
+    response, retrieved_docs, interaction_id = await assistant_service.chat_completion(user_query, session_id)
 
     sources = format_sources(retrieved_docs)
 
