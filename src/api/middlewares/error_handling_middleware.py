@@ -57,6 +57,7 @@ class ErrorHandlingMiddleware(BaseHTTPMiddleware):
                 "span_id": uuid.uuid4(),
                 "headers": dict(request.headers),
             }
+            print(exc)
             request_logger.exception({"message": "Unhandled exception", "error": error_data}) #logs the exception with a stack trace.
             
             error_response = {"detail": "Internal Server Error"}

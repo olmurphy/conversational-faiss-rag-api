@@ -18,7 +18,7 @@ CREATE TABLE user_interactions (
     interaction_id UUID NOT NULL,
     session_id UUID NOT NULL,
     user_query TEXT,
-    created_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     llm_response TEXT,
     edited_response TEXT,
     positive_feedback BOOLEAN,
@@ -28,7 +28,6 @@ CREATE TABLE user_interactions (
     interaction_time INTEGER,
     clicks INTEGER,
     scroll_depth FLOAT,
-    number_of_turns INTEGER,
     PRIMARY KEY (interaction_id)
 );
 

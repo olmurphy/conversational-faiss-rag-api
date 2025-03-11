@@ -1,13 +1,13 @@
 import json
 import logging
+import os
 from typing import Callable
 
 import jwt
+from api.middlewares.logger_middleware import CACHE_SESSION_ID_HEADER
 from context import AppContext
 from fastapi import FastAPI, HTTPException, Request
 from starlette.middleware.base import BaseHTTPMiddleware
-from api.middlewares.logger_middleware import CACHE_SESSION_ID_HEADER
-
 
 exclude_paths = ["/documentation", "/docs", "/openapi.json", "/readiness", "/liveness", "/favicon.ico"]
 
@@ -51,6 +51,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             raise ValueError("RedisAuth is not initialized in the context")
 
     async def dispatch(self, request: Request, call_next: Callable):
+        if os.getenv("ENV") == "local":
+            return await call_next(request)
+
         if any(request.url.path.startswith(path) for path in exclude_paths):
             return await call_next(request)
         

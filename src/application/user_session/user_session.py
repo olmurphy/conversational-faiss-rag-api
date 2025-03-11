@@ -1,14 +1,11 @@
-import datetime
 import json
 import uuid
 from logging import Logger
+from typing import Dict, List, Union
 
 from infrastructure.postgres_db_manager.postgres_session import PostgresSession
-from infrastructure.redis_manager.redis_session import (
-    CHAT_HISTORY_KEY_SUFFIX,
-    SESSION_KEY_PREFIX,
-    RedisSession,
-)
+from infrastructure.redis_manager.redis_session import RedisSession
+from langchain_core.messages import AIMessage, HumanMessage
 
 
 class UserSession:
@@ -24,71 +21,91 @@ class UserSession:
         self.postgres_session = postgres_session
         self.logger = logger
 
-    def get_chat_history(self, session_id):
+    def get_chat_history(self, session_id: uuid.UUID):
         """
         Cache-Aside Pattern:
         1. Try Redis first
         2. If cache miss → load from Postgres
         3. Update Redis (avoid thundering herd problem)
         """
-        cached_data = self.redis_session.get_chat_history(session_id=session_id)
+        request_id = uuid.uuid4()
+        try:
+            cached_data = self.redis_session.get_chat_history(session_id=session_id)
 
-        if cached_data:
-            print("Cache hit")
-            return json.loads(cached_data)
-
-        print("Cache miss - loading from DB")
-        chat_history = self._load_chat_history_from_db(session_id)
-        if chat_history:
-            self.redis_session.store_chat_message(session_id, chat_history)
-        return chat_history
-
-    def store_chat_message(self, session_id, messages):
-        """
-        Save the last 2 messages to the cache and persist everything in Postgres.
-        Invalidate cache after storing.
-        """
-        # 1. Persist to database
-        interaction_id = str(uuid.uuid4())
-        with self.get_db_connection() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(
-                    """
-                    INSERT INTO user_interactions (
-                        interaction_id, session_id, user_query, 
-                        llm_response, chat_history, created_at
-                    ) VALUES (%s, %s, %s, %s, %s, %s)
-                """,
-                    (
-                        interaction_id,
-                        session_id,
-                        messages[-2]["user_query"],
-                        messages[-1]["llm_response"],
-                        json.dumps(messages),
-                        datetime.utcnow(),
-                    ),
+            if cached_data:
+                self.logger.debug(
+                    {
+                        "request_id": request_id,
+                        "message": "Cache hit for chat history",
+                        "session_id": session_id,
+                    }
                 )
-                conn.commit()
+                return cached_data
+            self.logger.debug(
+                {
+                    "request_id": request_id,
+                    "message": "Cache miss - loading chat history from DB",
+                    "session_id": session_id,
+                }
+            )
+            chat_history = self.postgres_session.get_chat_history(session_id=session_id)
 
-        # 2. Invalidate Redis cache (force fresh fetch)
-        cache_key = f"chat_history:{session_id}"
-        self.redis_session.delete(cache_key)
-
-    def _load_chat_history_from_db(self, session_id):
-        """Load chat history from the database"""
-        with self.get_db_connection() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(
-                    """
-                    SELECT chat_history 
-                    FROM user_interactions
-                    WHERE session_id = %s
-                    ORDER BY created_at DESC
-                    LIMIT 1
-                """,
-                    (session_id,),
+            if chat_history:
+                self.redis_session.store_chat_message(session_id, chat_history)
+                self.logger.debug(
+                    {
+                        "request_id": request_id,
+                        "message": "Chat history loaded from DB and stored in cache",
+                        "session_id": session_id,
+                    }
                 )
-                row = cursor.fetchone()
-                if row:
-                    return json.loads(row[0])
-        return []
+
+                return chat_history
+            self.logger.warning(
+                {
+                    "request_id": request_id,
+                    "message": "Chat history not found in DB.",
+                    "session_id": session_id,
+                }
+            )
+            return []  # return empty list when no history is found.
+        except Exception as e:
+            if self.logger:
+                self.logger.error(
+                    {
+                        "request_id": request_id,
+                        "message": f"Error retrieving chat history for session_id: {session_id}",
+                        "error": str(e),
+                    }
+                )
+            return []  # Return empty list on error
+
+    def store_chat_message(self, session_id: uuid.UUID, messages: List[Union[AIMessage, HumanMessage]]):
+        """
+        Save the last user query and LLM response to Postgres.
+        Invalidate Redis cache.
+        """
+        request_id = uuid.uuid4()
+
+        try:    
+            interaction_id = self.postgres_session.store_chat_message(session_id, messages)
+            self.redis_session.delete_chat_history(session_id)
+           
+            self.logger.debug(
+                {
+                    "request_id": request_id,
+                    "message": "Chat message stored and cache invalidated",
+                    "session_id": session_id,
+                }
+            )
+            return interaction_id
+        except Exception as e:
+            
+            self.logger.error(
+                {
+                    "request_id": request_id,
+                    "message": f"Error storing chat message for session_id: {session_id}",
+                    "error": str(e),
+                }
+            )
+            raise

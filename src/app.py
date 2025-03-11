@@ -32,7 +32,7 @@ def create_app(context: AppContext) -> FastAPI:
     app.add_middleware(ErrorHandlingMiddleware, logger=context.logger)
     app.add_middleware(LoggerMiddleware, logger=context.logger)
     app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
-    # app.add_middleware(AuthenticationMiddleware, app_context=context)
+    app.add_middleware(AuthenticationMiddleware, app_context=context)
 
     app.include_router(liveness_handler.router)
     app.include_router(readiness_handler.router)

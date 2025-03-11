@@ -180,3 +180,5 @@ certs/
 
 # any data Need store in cloud S3, etc.
 src/data
+
+playground.py
