@@ -1,17 +1,15 @@
 import asyncio
 import time
 import uuid
+
 import faiss
 import numpy as np
 from application.assistance.chains.assistant_chain import AssistantChain
 from application.assistance.helper import load_documents
 from application.user_session.user_session import UserSession
 from context import AppContext
-from infrastructure.embeddings_manager.embeddings_manager import \
-    EmbeddingsManager
+from infrastructure.embeddings_manager.embeddings_manager import EmbeddingsManager
 from infrastructure.llm_manager.llm_manager import LlmManager
-from langchain_community.docstore.in_memory import InMemoryDocstore
-from langchain_community.vectorstores import FAISS
 from langchain_core.messages import AIMessage, HumanMessage
 
 
@@ -33,7 +31,6 @@ class AssistantService:
 
     def _init_embeddings(self):
         return EmbeddingsManager(self.app_context).get_embeddings_instance()
-    
 
     def _init_llm(self):
         return LlmManager(self.app_context).get_llm_instance
@@ -45,14 +42,14 @@ class AssistantService:
         # Load the LLM
         llm = self._init_llm()
 
-        faiss_db,  embeddings_vector = self._setup_faiss(embeddings)
+        faiss_db, embeddings_vector = self._setup_faiss(embeddings)
 
         self._chain = AssistantChain(
             app_context=self.app_context,
             faiss=faiss_db,
             llm=llm,
-            model = embeddings,
-            embeddings = embeddings_vector
+            model=embeddings,
+            embeddings=embeddings_vector,
         )
 
     def _setup_faiss(self, embedding_instance):
@@ -67,15 +64,13 @@ class AssistantService:
         load_time = time.perf_counter() - start_time
 
         embedding_size = self.app_context.configurations.embeddings.size
-        index = faiss.IndexIDMap(faiss.IndexFlatIP(
-            embedding_size
-        )) 
+        index = faiss.IndexIDMap(faiss.IndexFlatIP(embedding_size))
         index.nprobe = self.app_context.configurations.embeddings.nprobe
         start_time = time.perf_counter()
         embeddings = []
-        
+
         for d in documents:
-            embed = embedding_instance.encode(d) 
+            embed = embedding_instance.encode(d)
             embeddings.append(embed)
 
         embeddings = np.array(embeddings)
@@ -94,9 +89,7 @@ class AssistantService:
                 "event": "FAISS_SETUP",
             }
         )
-        return index,  embeddings
-    
-    
+        return index, embeddings
 
     async def chat_completion(
         self,
