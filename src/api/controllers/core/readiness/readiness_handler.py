@@ -1,7 +1,5 @@
-from fastapi import APIRouter, status
-
 from api.schemas.status_ok_schema import StatusOkResponseSchema
-
+from fastapi import APIRouter, status
 
 router = APIRouter()
 
@@ -10,7 +8,7 @@ router = APIRouter()
     "/readiness",
     response_model=StatusOkResponseSchema,
     status_code=status.HTTP_200_OK,
-    tags=["Health"]
+    tags=["Health"],
 )
 async def readiness():
     """
@@ -18,5 +16,4 @@ async def readiness():
     route will always response with an OK status and the 200 HTTP code as soon
     as the service is up.
     """
-
     return {"statusOk": True}

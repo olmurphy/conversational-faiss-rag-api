@@ -1,8 +1,4 @@
-import base64
 import logging
-import os
-import ssl
-import tempfile
 from urllib.parse import urlparse
 
 from sqlalchemy.engine.url import URL

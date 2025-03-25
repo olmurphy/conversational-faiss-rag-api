@@ -19,5 +19,6 @@ class LlmManager:
 			openai_api_key=self.app_context.env_vars.OPENAI_API_KEY,
             openai_api_base=self.app_context.env_vars.OPENAI_BASE_URL,
 			model=llm_configuration.name,
-            temperature=llm_configuration.temperature
+            temperature=llm_configuration.temperature,
+            top_p=llm_configuration.top_p
         )

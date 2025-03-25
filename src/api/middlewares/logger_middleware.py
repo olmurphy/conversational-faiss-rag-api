@@ -2,16 +2,13 @@ import logging
 import time
 import uuid
 
+from api.middlewares.contextvars import request_id_var
+from configurations.middleware_config import (CACHE_SESSION_ID_HEADER, EXCLUDED_PATHS,
+                    PERSON_NUMBER_HEADER, PROCESSING_TIME_HEADER,
+                    REQUEST_ID_HEADER, ROUTE_HEADER, SESSION_ID_HEADER,
+                    TRANSACTION_ID_HEADER)
 from starlette.datastructures import MutableHeaders
 from starlette.middleware.base import BaseHTTPMiddleware
-
-REQUEST_ID_HEADER = "x-request-id"
-TRANSACTION_ID_HEADER = "x-transaction-id"
-SESSION_ID_HEADER = "x-session-id"
-CACHE_SESSION_ID_HEADER = "x-cache-session-id"
-PERSON_NUMBER_HEADER = "x-person-number"
-PROCESSING_TIME_HEADER = "x-processing-time"
-ROUTE_HEADER = "x-route"
 
 
 class ReqIdLoggerAdapter(logging.LoggerAdapter):
@@ -22,7 +19,7 @@ class ReqIdLoggerAdapter(logging.LoggerAdapter):
     def process(self, msg, kwargs):
         if "extra" not in kwargs:
             kwargs["extra"] = {}
-        kwargs["extra"]["request_id"] = self.extra.get("request_id", str(uuid.uuid4()))
+        kwargs["extra"]["request_id"] = self.extra.get(request_id_var.get())
         kwargs["extra"]["transaction_id"] = self.extra.get(
             "transaction_id", str(uuid.uuid4())
         )
@@ -46,14 +43,9 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         self.logger = logger
 
     async def dispatch(self, request, call_next):
-        excluded_paths = [
-            "/readiness",
-            "/liveness",
-            "/openapi.json",
-            "/docs"
-        ]
-
-        request_id = request.headers.get(REQUEST_ID_HEADER, str(uuid.uuid4()))
+        request_id = str(uuid.uuid4())  # Generate unique request ID
+        request_id_var.set(request_id)
+        request.state.request_id = request_id  # Store in request state
         transaction_id = request.headers.get(
             TRANSACTION_ID_HEADER, str(uuid.uuid4())
         )  # Default to UUID if missing
@@ -83,7 +75,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         }
         request_logger = ReqIdLoggerAdapter(self.logger, log_extra)
 
-        if request.url.path not in excluded_paths:
+        if request.url.path not in EXCLUDED_PATHS:
             request_logger.debug(
                 {
                     "message": f"{request.method} {request.url.path}",
@@ -105,7 +97,7 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         request.state.logger = request_logger
         response = await call_next(request)
 
-        if request.url.path not in excluded_paths:
+        if request.url.path not in EXCLUDED_PATHS:
             duration = time.time() - start_time
             response.headers[PROCESSING_TIME_HEADER] = str(duration)
             response.headers[REQUEST_ID_HEADER] = request_id

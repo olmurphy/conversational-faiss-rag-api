@@ -1,34 +1,40 @@
 import time
-import uuid
+import numpy as np
 from typing import Any
-
-import tiktoken
 from application.assistance.chains.aggregate_docs_chain import AggregateDocsChain
 from application.assistance.chains.assistant_prompt import AssistantPromptBuilder
+from application.assistance.helper import load_documents
 from context import AppContext
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
 from application.assistance.chains.process_history import ChatHistoryProcessor
 
-
 class AssistantChain:
     faiss_retriever = None
     llm: Any
     prompt_template = None
+    
 
-    def __init__(self, app_context: AppContext, faiss: FAISS, llm):
+    def __init__(self, app_context: AppContext, faiss: FAISS, llm, model,  embeddings):
         self.app_context = app_context
         self.faiss_retriever = faiss
         self.llm = llm
+        self.model = model
+        self.embeddings = embeddings
+        self.response = dict()
 
-    def _build_default_prompt(self, context) -> PromptTemplate:
-        return AssistantPromptBuilder().build(context)
+    def _build_default_prompt(self, context, query) -> PromptTemplate:
+        return AssistantPromptBuilder().build(context, query)
 
-    def _create_chain(self, context):
+    def _create_chain(self, context, query):
         if not self.prompt_template:
-            self.prompt_template = self._build_default_prompt(context)
-
+            self.prompt_template = self._build_default_prompt(context, query)
+            
         return self.prompt_template | self.llm
+
+    
+    
+    
 
     def _invoke(self, query, chat_history_messages):
         """
@@ -41,21 +47,24 @@ class AssistantChain:
         Returns:
             A tuple containing the response and retrieved documents.
         """
-        request_id = str(uuid.uuid4())  # create a request id.
 
         try:
             start_time = time.perf_counter()
-            retrieved_docs = self.faiss_retriever.similarity_search_with_score(
-                query,
-                k=self.app_context.configurations.vectorStore.maxDocumentsToRetrieve,
+            
+            query_embed = self.model.encode(query)
+            query_embed = np.expand_dims(query_embed, axis=0)
+            score, doc = self.faiss_retriever.search(
+                query_embed,
+                self.app_context.configurations.vectorStore.maxDocumentsToRetrieve
             )
-            retrieval_time = time.perf_counter() - start_time
+
+            
+            
         except Exception as e:
             self.app_context.logger.error(
                 {
                     "message": "Error during document retrieval",
                     "error": str(e),
-                    "request_id": request_id,
                     "event": "DOCUMENT_RETRIEVAL_ERROR",
                 }
             )
@@ -63,18 +72,32 @@ class AssistantChain:
                 "Error retrieving documents.",
                 [],
             )  # Return error message and empty list
+        
 
-        retrieved_docs = [
-            (doc, score)
-            for doc, score in retrieved_docs
-            if score > self.app_context.configurations.vectorStore.minScoreDistance
-        ]
-
+        retrieval_scores_norm = score[0] / np.sum(score[0])
+        retrieval_scores_sorted = np.sort(retrieval_scores_norm)[::-1]
+        cdf = np.cumsum(retrieval_scores_sorted)
+        retrieval_scores_sorted = np.sort(score[0])[::-1]
+        cutoff = self.app_context.configurations.vectorStore.cutOffDistance
+        index = np.where(cdf <= cutoff)[0][-1] if np.any(cdf <= cutoff) else None
+        retrieval_scores_norm = score[0] / np.sum(score[0])
+        retrieval_scores_sorted = np.sort(retrieval_scores_norm)[::-1]
+        cdf = np.cumsum(retrieval_scores_sorted)
+        cutoff = self.app_context.configurations.vectorStore.cutOffDistance
+        documents = load_documents(self.app_context.env_vars.SAMPLE_DATA_PATH)
+        index = np.where(cdf <= cutoff)[0][-1] if np.any(cdf <= cutoff) else None
+        selected_doc_indexes = doc[0][:index+1]
+        selected_docs = [documents[i] for i in selected_doc_indexes]
+        selected_scores = score[0][:index+1]
+        retrieval_time = time.perf_counter() - start_time
+        retrieved_docs = []
+        if np.max(score[0]) >= self.app_context.configurations.vectorStore.minScoreDistance:
+            retrieved_docs = [(selected_docs[i], selected_scores[i]) for i in range(index)]
         context, context_metadata, combine_docs_time = (
             AggregateDocsChain(self.app_context).combine_docs(retrieved_docs)
         )
-
-        chain = self._create_chain(context)
+        
+        chain = self._create_chain(context, query)
 
         (
             processed_chat_history,
@@ -86,15 +109,15 @@ class AssistantChain:
         )
 
         try:
+            
             start_time = time.perf_counter()
-            response = chain.invoke(processed_chat_history)
+            self.response = chain.invoke({})
             invoke_time = time.perf_counter() - start_time
         except Exception as e:
             self.app_context.logger.error(
                 {
                     "message": "Error invoking chain",
                     "error": str(e),
-                    "request_id": request_id,
                     "event": "CHAIN_INVOCATION_ERROR",
                     "data": {
                         "context": f"Context provided: {context[:25]}",
@@ -126,9 +149,8 @@ class AssistantChain:
                         "token_count": processed_chat_token_count,
                         "limit_exceeded": limit_exceeded
                     },
-                    "request_id": request_id,
                 },
                 "event": "REQUEST_PROCESSING",
             }
         )
-        return response, retrieved_docs
+        return self.response, retrieved_docs, invoke_time, retrieval_time

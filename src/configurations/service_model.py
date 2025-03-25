@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Optional
+from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -29,6 +29,11 @@ class OpenAILlmConfiguration(BaseModel):
         ...,
         description="max number of tokens of context (doc context retrieval) to include in the LLM invoke call",
     )
+    top_p: float = Field(
+    ...,
+    description="Nucleus sampling: cumulative probability threshold for token selection (0.0 to 1.0, higher = more diverse)."
+    "Controls output diversity by selecting the most likely tokens until the cumulative probability exceeds this value.",
+)
 
 
 
@@ -45,7 +50,14 @@ class EmbeddingsConfiguration(BaseModel):
         ...,
         description="This is a boolean, True if want to normalize embeddings, False otherwise",
     )
-    
+    size: int = Field(
+        ...,
+        description= "Size of the vector embedding, dpends on the embedding model"
+    ),
+    nprobe: int = Field(
+            ...,
+            description= "Number of clusters to explorer at search time."
+        )
 
 
 class RelevanceScoreFn(Enum):
@@ -73,12 +85,13 @@ class VectorStore(BaseModel):
         4,
         description="The maximum number of documents to be retrieved from the vector store.",
     )
-    maxScoreDistance: Optional[float] = Field(
+    cutOffDistance: Optional[float] = Field(
         None, description="The maximum score distance for the vectors."
     )
     minScoreDistance: Optional[float] = Field(
-        None, description="The maximum score distance for the vectors."
+        None, description="The min score distance for the vectors."
     )
+
 
 class Cache(BaseModel):
     capacity: int = Field(
@@ -92,6 +105,7 @@ class Cache(BaseModel):
     cleanup_interval: int = Field(
         ..., description="time to wait until check to clean up cache again"
     )
+
 
 class Redis(BaseModel):
     time_to_live: int = Field(
@@ -107,19 +121,21 @@ class Redis(BaseModel):
         description="number of seconds to wait before polling again",
     )
 
+
 class PostgresDB(BaseModel):
     pool_size: int = Field(
         ...,
-        description="Specifies the initial number of database connections maintained in the connection pool."
+        description="Specifies the initial number of database connections maintained in the connection pool.",
     )
     max_overflow: int = Field(
         ...,
-        description="Defines the maximum number of additional connections that can be created beyond the pool size when needed."
+        description="Defines the maximum number of additional connections that can be created beyond the pool size when needed.",
     )
     pool_recycle: int = Field(
         ...,
-        description="Sets the number of seconds a connection can remain idle before being recycled to prevent stale connections."
+        description="Sets the number of seconds a connection can remain idle before being recycled to prevent stale connections.",
     )
+
 
 class ConfigSchema(BaseModel):
     llm: OpenAILlmConfiguration
@@ -128,4 +144,3 @@ class ConfigSchema(BaseModel):
     cache: Cache
     redis: Redis
     postgresDB: PostgresDB
-

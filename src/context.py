@@ -2,14 +2,13 @@ from logging import Logger
 from typing import Optional
 
 from attrs import define
-
-# from infrastructure.metrics.manager import MetricsManager
 from configurations.service_model import ConfigSchema
 from configurations.variables_model import Variables
-from starlette.requests import Request
-from infrastructure.redis_manager.redis_session import RedisSession
-from infrastructure.redis_manager.redis_auth import RedisAuth
+from infrastructure.metrics_manager.metrics_manager import MetricsManager
 from infrastructure.postgres_db_manager.postgres_session import PostgresSession
+from infrastructure.redis_manager.redis_auth import RedisAuth
+from infrastructure.redis_manager.redis_session import RedisSession
+from starlette.requests import Request
 
 
 class RequestContext:
@@ -42,46 +41,42 @@ class RequestContext:
 @define
 class AppContextParams:
     logger: Logger
-    # metrics_manager: MetricsManager
+    metrics_manager: MetricsManager
     env_vars: Variables
     configurations: ConfigSchema
     request_context: Optional[RequestContext] = None
-    redis_session: Optional[RedisSession] = None # Add this line
+    redis_session: Optional[RedisSession] = None  # Add this line
     redis_auth: Optional[RedisAuth] = None
     postgres_session: Optional[PostgresSession] = None
+
 
 class AppContext:
     """
     The AppContext class serves as a container for key components used across the application.
 
-    It holds instances of the logger, metrics manager, environment variables, and configurations,  allowing these
-    instances to be shared and easily accessed throughout the application.
+    It holds instances of the logger, metrics manager, environment variables, and configurations, redis, and postgres
+    allowing these instances to be shared and easily accessed throughout the application.
     """
 
     def __init__(self, params: AppContextParams):
         self._logger = params.logger
-        # self._metrics_manager = params.metrics_manager
+        self._metrics_manager = params.metrics_manager
         self._env_vars = params.env_vars
         self._configurations = params.configurations
         self._request_context = (
             params.request_context if params.request_context else None
         )
-        self._redis_session = params.redis_session # Add this line
+        self._redis_session = params.redis_session
         self._redis_auth = params.redis_auth
         self._postgres_session = params.postgres_session
-
 
     @property
     def logger(self):
         return self._logger
 
-    # @property
-    # def metrics_manager(self):
-    #     return self._metrics_manager
-
     @property
-    def lru_cahce(self):
-        return self._lru_cache
+    def metrics_manager(self):
+        return self._metrics_manager
 
     @property
     def env_vars(self):
@@ -102,7 +97,7 @@ class AppContext:
     @property
     def redis_auth(self):
         return self._redis_auth
-    
+
     @property
     def postgres_session(self):
         return self._postgres_session
@@ -113,7 +108,7 @@ class AppContext:
         """
         params = AppContextParams(
             logger=request_logger,
-            # metrics_manager=self._metrics_manager,
+            metrics_manager=self._metrics_manager,
             env_vars=self._env_vars,
             configurations=self._configurations,
             request_context=RequestContext(
@@ -121,8 +116,8 @@ class AppContext:
                 env_vars=self._env_vars,
                 request=request if request else None,
             ),
-            redis_session = self._redis_session,
+            redis_session=self._redis_session,
             redis_auth=self._redis_auth,
-            postgres_session=self._postgres_session
+            postgres_session=self._postgres_session,
         )
         return AppContext(params)

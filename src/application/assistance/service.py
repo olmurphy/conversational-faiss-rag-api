@@ -1,6 +1,6 @@
+import asyncio
 import time
 import uuid
-
 import faiss
 import numpy as np
 from application.assistance.chains.assistant_chain import AssistantChain
@@ -19,10 +19,7 @@ class AssistantService:
 
     _chain: AssistantChain = None
 
-    def __init__(
-        self,
-        app_context: AppContext,
-    ) -> None:
+    def __init__(self, app_context: AppContext) -> None:
         """
         Initialize the Assistant Service
         """
@@ -36,6 +33,7 @@ class AssistantService:
 
     def _init_embeddings(self):
         return EmbeddingsManager(self.app_context).get_embeddings_instance()
+    
 
     def _init_llm(self):
         return LlmManager(self.app_context).get_llm_instance
@@ -47,12 +45,14 @@ class AssistantService:
         # Load the LLM
         llm = self._init_llm()
 
-        faiss = self._setup_faiss(embeddings)
+        faiss_db,  embeddings_vector = self._setup_faiss(embeddings)
 
         self._chain = AssistantChain(
             app_context=self.app_context,
-            faiss=faiss,
+            faiss=faiss_db,
             llm=llm,
+            model = embeddings,
+            embeddings = embeddings_vector
         )
 
     def _setup_faiss(self, embedding_instance):
@@ -60,33 +60,29 @@ class AssistantService:
         Sets up a FAISS (Facebook AI Similarity Search) index for document retrieval.
         This method loads documents, generates embeddings, normalizes them, and builds a FAISS index.
         """
+
         start_time = time.perf_counter()
         documents = load_documents(self.app_context.env_vars.SAMPLE_DATA_PATH)
+        documents = [str(d) for d in documents]
         load_time = time.perf_counter() - start_time
 
+        embedding_size = self.app_context.configurations.embeddings.size
+        index = faiss.IndexIDMap(faiss.IndexFlatIP(
+            embedding_size
+        )) 
+        index.nprobe = self.app_context.configurations.embeddings.nprobe
         start_time = time.perf_counter()
-        embeddings = embedding_instance.embed_documents(
-            [doc.page_content for doc in documents]
-        )
+        embeddings = []
+        
+        for d in documents:
+            embed = embedding_instance.encode(d) 
+            embeddings.append(embed)
+
+        embeddings = np.array(embeddings)
+        index.train(embeddings)
         embedding_time = time.perf_counter() - start_time
-        embeddings_np = np.array(embeddings).astype("float32")
-        faiss.normalize_L2(embeddings_np)
-        index = faiss.IndexFlatIP(
-            embeddings_np.shape[1]
-        )  # Inner product (cosine similarity)
-        index.add(embeddings_np)
-
-        uuids = [str(uuid.uuid4()) for _ in range(len(documents))]
-        index_to_docstore_id = {i: doc_id for i, doc_id in enumerate(uuids)}
-        faiss_db = FAISS(
-            embedding_function=embedding_instance,
-            index=index,
-            docstore=InMemoryDocstore(
-                {doc_id: doc for doc_id, doc in zip(uuids, documents)}
-            ),
-            index_to_docstore_id=index_to_docstore_id,
-        )
-
+        uuids = [id for id in range(len(documents))]
+        index.add_with_ids(embeddings, uuids)
         self.app_context.logger.debug(
             {
                 "message": "FAISS setup completed",
@@ -98,8 +94,9 @@ class AssistantService:
                 "event": "FAISS_SETUP",
             }
         )
-
-        return faiss_db
+        return index,  embeddings
+    
+    
 
     async def chat_completion(
         self,
@@ -107,10 +104,8 @@ class AssistantService:
         session_id: str,
     ):
         """
-        Chat completion using Assistant Chain
+        Chat completion using Assistant Chain, with metrics logging to DB
         """
-
-        request_id = str(uuid.uuid4())
         chat_history = await self.user_session.get_chat_history(uuid.UUID(session_id))
 
         self.app_context.logger.info(
@@ -119,22 +114,48 @@ class AssistantService:
                 "data": query,
                 "request_payload_size": query,
                 "event": "REQUEST_RECEIVED",
-                "request_id": request_id,
             }
         )
 
         chat_history.append(HumanMessage(content=query))
 
         rag_start: float = time.perf_counter()
-        response, retrieved_docs = self._chain._invoke(
+        response, retrieved_docs, invoke_time, retrieval_time = self._chain._invoke(
             query=query, chat_history_messages=[msg for msg in chat_history]
         )
         rag_time: float = time.perf_counter() - rag_start
 
         chat_history.append(AIMessage(content=response.content))
-        interaction_id = self.user_session.store_chat_message(
-            uuid.UUID(session_id), chat_history[-2:]
-        )  # store the last 2 messages.
+        interaction_id = await self.user_session.store_chat_message(
+            uuid.UUID(session_id), chat_history[-2:], invoke_time
+        )
+
+        # Log the metrics for the retrieval process
+        retrieved_document_ids = []
+        retrieved_docs_count = len(retrieved_docs)
+        similarity_scores = []
+        document_sources = []
+        document_lengths = []
+
+        for doc, score in retrieved_docs:
+            retrieved_document_ids.append(doc.id if doc.id is not None else None)
+            similarity_scores.append(score)
+            document_sources.append(doc.metadata.get("Name", "Unknown Title"))
+            document_lengths.append(len(doc.page_content))
+
+        asyncio.create_task(  # Rag retrieval metrics
+            self.app_context.postgres_session.record_rag_retrieval_metrics(
+                rag_time,
+                retrieved_document_ids,
+                retrieved_docs_count,
+                similarity_scores,
+                retrieval_time,
+                document_sources,
+                document_lengths,
+                interaction_id,
+            )
+        )
+
         self.app_context.logger.info(
             {
                 "message": "Rag model finished response",
@@ -148,7 +169,6 @@ class AssistantService:
                 ),
                 "usage_metadata": response.usage_metadata,
                 "rag_time": rag_time,  # log the total rag time.
-                "request_id": request_id,
             }
         )
 

@@ -1,4 +1,3 @@
-import redis
 import json
 from langchain.schema import HumanMessage, AIMessage
 

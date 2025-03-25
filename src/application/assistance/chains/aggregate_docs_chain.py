@@ -26,10 +26,10 @@ class AggregateDocsChain:
             self.tokenizer_model_name
         )
 
-    def combine_docs(self, docs: List[Tuple[Document, int]]) -> Tuple[Union[str, dict]]:
+    def combine_docs(self, docs: List[Tuple[Document, float]]) -> Tuple[Union[str, dict]]:
         """
         Combines a list of documents into a single text, respecting token limits.
-
+re
         Args:
             docs: A list of tuples, where each tuple contains a Document and an integer (unused in this implementation).
 
@@ -71,7 +71,7 @@ class AggregateDocsChain:
         combined_text = ""
         token_count = 0
         limit_exceeded = False
-        for doc, _ in docs:
+        for doc, score in docs:
             metadata_str = ", ".join(f"{key}: {value}" for key, value in doc.metadata.items())
             metadata_tokens = self.tokenizer.encode(metadata_str)
             content_tokens = self.tokenizer.encode(doc.page_content)
@@ -79,7 +79,7 @@ class AggregateDocsChain:
             if token_count + new_tokens > self.aggreate_max_token_number:
                 limit_exceeded = True
                 break
-            combined_text += f"\n\n[Metadata: {metadata_str}]\n{doc.page_content}"
+            combined_text += f"\n\n[Metadata: {metadata_str}]\n[Content: {doc.page_content}]\n[Score: {float(score)}]"
             token_count += new_tokens
 
         if combined_text != "":

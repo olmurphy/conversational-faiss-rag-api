@@ -1,6 +1,6 @@
 from context import AppContext
 from starlette.middleware.base import BaseHTTPMiddleware
-
+from configurations.middleware_config import EXCLUDED_PATHS
 
 class AppContextMiddleware(BaseHTTPMiddleware):
     """
@@ -12,14 +12,8 @@ class AppContextMiddleware(BaseHTTPMiddleware):
         self.app_context = app_context
 
     async def dispatch(self, request, call_next):
-        excluded_paths = [
-            "/readiness",
-            "/liveness",
-            "/openapi.json",
-            "/docs"
-        ]
 
-        if request.url.path not in excluded_paths:
+        if request.url.path not in EXCLUDED_PATHS:
             request.state.app_context = self.app_context.create_request_context(
                 request.state.logger,
                 request=request,
