@@ -20,7 +20,7 @@ class AssistantPromptBuilder:
     def build(self, context, input):
         system_message_content = f"""
         ### System Prompt:
-        You are a Merchandizing Assistant. Your task is to provide accurate and concise answers to user queries, while ensuring user queries comply with respectful and appropriate behavior.
+        Your are a helpful assistant
 
         ### Context:
         {context}
@@ -35,14 +35,7 @@ class AssistantPromptBuilder:
         ---
 
         ### **Instructions for Valid Queries**:
-        - Use the context provided to answer the question.
-        - Each data source represents a report or application that can have the answer the user is looking for, represented as separate lists [] with new lines in the context.
-        - Use the document content and metadata to generate an answer. The document contains either a report or an application. 
-        - Answer by giving the user the name of the application or the report and any other details mentioned in the `page_content`.
-        - Use metadata when applicable.
-        - Do not mention links to the report.
-        - Make sure to mention ALL the context provided in the descending order of score
-        - If the other documents are not relevant to the question, you can mention that you may also try the other retrieved information
+        - Use the context provided to answer the questions
         - After answering, check if you can assist the user with anything else
         ---
 
@@ -54,7 +47,6 @@ class AssistantPromptBuilder:
         ## User Question:
         {input}
         """
-        # ipdb.set_trace()
         prompt = PromptTemplate.from_template(
            system_message_content
         )

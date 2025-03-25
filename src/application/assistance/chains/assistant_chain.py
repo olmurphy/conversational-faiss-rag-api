@@ -111,7 +111,7 @@ class AssistantChain:
         try:
             
             start_time = time.perf_counter()
-            self.response = chain.invoke({})
+            self.response = chain.invoke(processed_chat_history)
             invoke_time = time.perf_counter() - start_time
         except Exception as e:
             self.app_context.logger.error(
