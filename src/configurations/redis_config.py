@@ -1,7 +1,5 @@
-# src/configuration/redis_config.py
 import redis
 import urllib.parse
-import ssl
 from logging import Logger
 import base64
 import tempfile

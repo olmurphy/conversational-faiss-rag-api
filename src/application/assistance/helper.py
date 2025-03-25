@@ -4,8 +4,8 @@ import pandas as pd
 from langchain.schema import Document
 
 def load_documents(file_loc: str) -> List[Document]:
-    file_path = file_loc + "/Final_client_data.csv"
-    df = pd.read_csv(file_path)
+    file_path = file_loc + "/client_data_appended.csv"
+    df = pd.read_csv(file_path) 
     documents = []
     
     for _, row in df.iterrows():

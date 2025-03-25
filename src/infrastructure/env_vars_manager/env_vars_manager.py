@@ -3,7 +3,6 @@ from logging import Logger
 from typing import TypeVar, Generic, Type
 from attrs import define
 from pydantic import ValidationError as PydanticValidationError, BaseModel
-from dotenv import load_dotenv
 
 from infrastructure.env_vars_manager.errors import ModelValidationError
 
@@ -14,7 +13,6 @@ class EnvVarsParams:
     model: Type[T]
     logger: Logger
 
-load_dotenv()
 class EnvVarsManager(Generic[T]):
 
     def __init__(self, params: EnvVarsParams):

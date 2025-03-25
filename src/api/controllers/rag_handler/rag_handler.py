@@ -2,29 +2,15 @@ from datetime import datetime, timezone
 
 from api.controllers.helper import format_response
 from api.controllers.rag_handler.helper import format_sources
-from api.middlewares.logger_middleware import SESSION_ID_HEADER
 from api.schemas.base_request_response_model import ErrorResponse
-from api.schemas.rag_handler_schemas import (
-    AskQuestionInputSchema,
-    AskQuestionOutputSchema,
-)
+from api.schemas.rag_handler_schemas import (AskQuestionInputSchema,
+                                             AskQuestionOutputSchema)
 from application.assistance.service import AssistantService
+from configurations.middleware_config import SESSION_ID_HEADER
 from context import AppContext
 from fastapi import APIRouter, Request, status
-from application.user_session.user_session import UserSession
 
 router = APIRouter()
-
-
-@router.get("/test")
-async def test(request: Request):
-    request_context: AppContext = request.state.app_context
-
-    postgres_session = request_context.postgres_session
-    chat_history = postgres_session.get_chat_history(
-        "ab0e4862-846d-434e-8ff3-35b4ea8ea286"
-    )
-    return chat_history
 
 
 @router.post(
@@ -58,7 +44,9 @@ async def ask_question_endpoint(request: Request, chat_query: AskQuestionInputSc
             error={"code": "BAD_REQUEST", "message": "query parameter is required"},
         )
     assistant_service = AssistantService(app_context=request_context)
-    response, retrieved_docs, interaction_id = await assistant_service.chat_completion(user_query, session_id)
+    response, retrieved_docs, interaction_id = await assistant_service.chat_completion(
+        user_query, session_id
+    )
 
     sources = format_sources(retrieved_docs)
 

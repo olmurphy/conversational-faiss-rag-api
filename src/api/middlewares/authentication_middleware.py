@@ -5,11 +5,11 @@ from typing import Callable
 
 import jwt
 from api.middlewares.logger_middleware import CACHE_SESSION_ID_HEADER
+from configurations.middleware_config import EXCLUDED_PATHS
 from context import AppContext
 from fastapi import FastAPI, HTTPException, Request
 from starlette.middleware.base import BaseHTTPMiddleware
 
-exclude_paths = ["/documentation", "/docs", "/openapi.json", "/readiness", "/liveness", "/favicon.ico"]
 
 class AuthenticationMiddleware(BaseHTTPMiddleware):
     """
@@ -43,6 +43,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         10. If the token is valid, proceed with the request.
         11. If any error occurs during the process, return a 401 or 500 error.
     """
+
     def __init__(self, app: FastAPI, app_context: AppContext):
         super().__init__(app)
         self.logger: logging.Logger = app_context.logger
@@ -54,9 +55,8 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         if os.getenv("ENV") == "local":
             return await call_next(request)
 
-        if any(request.url.path.startswith(path) for path in exclude_paths):
+        if any(request.url.path.startswith(path) for path in EXCLUDED_PATHS):
             return await call_next(request)
-        
 
         # Try to get token from Authorization header first
         auth_header = request.headers.get("Authorization")
@@ -80,17 +80,25 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         try:
             await self.authenticate_request(token)
             response = await call_next(request)
-            self.logger.debug({"message": f"Request {request.method} {request.url.path} Authentication successful"})
+            self.logger.debug(
+                {
+                    "message": f"Request {request.method} {request.url.path} Authentication successful"
+                }
+            )
             return response
         except HTTPException as e:
             self.logger.warning({"message": "Authentication error", "error": e})
             raise e
         except Exception as e:
-            self.logger.error({"message": "Unexpected error during authentication", "error": e})
+            self.logger.error(
+                {"message": "Unexpected error during authentication", "error": e}
+            )
             raise HTTPException(status_code=500, detail="Internal Server Error")
 
     async def authenticate_request(self, token: str):
-        self.logger.debug({"message": "Authenticating request with token", "data": token})
+        self.logger.debug(
+            {"message": "Authenticating request with token", "data": token}
+        )
         headers = jwt.get_unverified_header(token)
         kid = headers["kid"]
         unverified_payload = jwt.decode(
