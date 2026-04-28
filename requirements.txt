@@ -3,7 +3,7 @@ uvicorn
 openai
 pydantic
 python-dotenv
-python-json-logger>=3.3.0
+python-json-logger>=4.1.0
 attrs
 jsonschema
 faiss-cpu
